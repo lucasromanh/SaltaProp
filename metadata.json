@@ -1,0 +1,7 @@
+{
+  "name": "Salta Propiedades Premium",
+  "description": "Una plataforma inmobiliaria ultra-moderna centrada en la experiencia visual de Salta Capital, con vistas 360, tours en video y herramientas financieras inteligentes.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
