@@ -214,6 +214,7 @@ const App: React.FC = () => {
   const [aiMessage, setAiMessage] = useState('');
   const [aiResponse, setAiResponse] = useState('');
   const [searchSuggestions, setSearchSuggestions] = useState<string[]>([]);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -380,23 +381,25 @@ const App: React.FC = () => {
       )}
 
       {/* Navigation */}
-      <nav className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${isScrolled || view !== 'HOME' ? 'bg-black/95 backdrop-blur-3xl py-4 border-b border-white/5 shadow-2xl' : 'bg-transparent py-8'}`}>
+      <nav className={`fixed top-0 left-0 right-0 z-[200] transition-all duration-500 ${isScrolled || view !== 'HOME' ? 'bg-black/95 backdrop-blur-3xl py-4 border-b border-white/5 shadow-2xl' : 'bg-transparent py-4 md:py-8'}`}>
         <div className="container mx-auto px-6 flex justify-between items-center">
-          <div className="flex items-center gap-4 cursor-pointer" onClick={() => { setView('HOME'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-            <div className="w-10 h-10 bg-orange-600 rounded-lg flex items-center justify-center transform rotate-12 transition-transform hover:rotate-0">
-              <HomeIcon className="text-white" size={20} />
+          <div className="flex items-center gap-3 md:gap-4 cursor-pointer" onClick={() => { setView('HOME'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+            <div className="w-8 h-8 md:w-10 md:h-10 bg-orange-600 rounded-lg flex items-center justify-center transform rotate-12 transition-transform hover:rotate-0">
+              <HomeIcon className="text-white" size={16} />
             </div>
-            <h1 className="text-xl font-black tracking-tighter uppercase italic">Salta<span className="text-orange-600">Prop</span></h1>
+            <h1 className="text-lg md:text-xl font-black tracking-tighter uppercase italic">Salta<span className="text-orange-600">Prop</span></h1>
           </div>
+
           <div className="hidden lg:flex items-center gap-10 text-[10px] font-black uppercase tracking-[0.25em]">
             <button onClick={() => { setFilters({ ...initialFilters, transaction: TransactionType.BUY }); setView('LISTINGS'); }} className="hover:text-orange-500 transition-colors">Compra</button>
             <button onClick={() => { setFilters({ ...initialFilters, transaction: TransactionType.RENT }); setView('LISTINGS'); }} className="hover:text-orange-500 transition-colors">Alquiler</button>
             <button onClick={() => { setFilters({ ...initialFilters, transaction: TransactionType.PROJECTS }); setView('LISTINGS'); }} className="hover:text-orange-500 transition-colors">Proyectos</button>
             <button onClick={() => { setFilters({ ...initialFilters, isPrivateBarrio: true }); setView('LISTINGS'); }} className="hover:text-orange-500 transition-colors">Barrios Privados</button>
           </div>
-          <div className="flex items-center gap-6">
-            <button onClick={() => setAuthModal('PUBLISH')} className="hidden sm:block text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-white transition-colors">Publicar</button>
-            <button onClick={() => setAuthModal('LOGIN')} className="bg-white text-black px-7 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-orange-600 hover:text-white transition-all shadow-xl">Ingresar</button>
+
+          <div className="flex items-center gap-3 md:gap-6">
+            <button onClick={() => { setFilters({ ...initialFilters, transaction: TransactionType.BUY }); setView('LISTINGS'); }} className="lg:hidden w-10 h-10 bg-white/5 rounded-full flex items-center justify-center"><Search size={18} /></button>
+            <button onClick={() => setAuthModal('LOGIN')} className="bg-white text-black px-5 md:px-7 py-2 md:py-2.5 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-widest hover:bg-orange-600 hover:text-white transition-all shadow-xl">Ingresar</button>
           </div>
         </div>
       </nav>
@@ -405,26 +408,26 @@ const App: React.FC = () => {
         {view === 'HOME' && (
           <div className="animate-in fade-in duration-700">
             {/* Hero Section */}
-            <section className="relative h-[150vh] flex flex-col items-center justify-center overflow-hidden">
+            <section className="relative h-screen lg:h-[150vh] flex flex-col items-center justify-center overflow-hidden">
               <div className="absolute inset-0 z-0">
                 <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=2400" className="w-full h-full object-cover opacity-60 scale-105 animate-slow-zoom" alt="Salta Background" />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-[#050505]" />
               </div>
               <div className="relative z-10 container mx-auto px-6 text-center max-w-5xl">
-                <h2 className="text-5xl md:text-8xl font-black mb-16 leading-tight tracking-tighter">Tu próximo hogar <br /><span className="text-orange-600 italic">está en Salta.</span></h2>
-                <div className="bg-white/[0.03] backdrop-blur-3xl p-8 rounded-[3rem] border border-white/10 shadow-3xl">
-                  <div className="flex gap-4 mb-6 ml-4">
+                <h2 className="text-3xl md:text-8xl font-black mb-6 md:mb-16 leading-[1.1] tracking-tighter">Tu próximo hogar <br /><span className="text-orange-600 italic">está en Salta.</span></h2>
+                <div className="bg-white/[0.03] backdrop-blur-3xl p-4 md:p-8 rounded-[1.5rem] md:rounded-[3rem] border border-white/10 shadow-3xl mx-auto w-full max-w-[calc(100vw-3rem)]">
+                  <div className="flex gap-2 md:gap-4 mb-5 ml-0 md:ml-4 overflow-x-auto no-scrollbar pb-1 md:pb-0 justify-start md:justify-start">
                     {[TransactionType.BUY, TransactionType.RENT, TransactionType.PROJECTS].map((t) => (
                       <button
                         key={t}
                         onClick={() => setFilters(prev => ({ ...prev, transaction: t as any }))}
-                        className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] transition-all ${filters.transaction === t ? 'bg-orange-600 text-white' : 'hover:bg-white/5 text-gray-400'}`}
+                        className={`shrink-0 px-4 md:px-6 py-2 rounded-full text-[8px] md:text-[10px] font-black uppercase tracking-[0.15em] md:tracking-[0.2em] transition-all ${filters.transaction === t ? 'bg-orange-600 text-white' : 'hover:bg-white/5 text-gray-400'}`}
                       >
                         {t}
                       </button>
                     ))}
                   </div>
-                  <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center">
+                  <div className="flex flex-col md:flex-row gap-2.5 md:gap-3 items-stretch md:items-center">
                     <div className="relative w-full md:w-64">
                       <select
                         value={filters.type}
@@ -543,10 +546,24 @@ const App: React.FC = () => {
 
         {view === 'LISTINGS' && (
           <div className="pt-32 min-h-screen bg-[#050505] animate-in fade-in duration-500 flex flex-col">
-            <div className="container mx-auto px-6 py-12 flex flex-col lg:flex-row gap-12 flex-1">
-              <aside className="lg:w-[360px] shrink-0">
-                <div className="sticky top-32 max-h-[calc(140vh-160px)] overflow-y-auto no-scrollbar pr-2">
+            <div className="container mx-auto px-6 py-6 flex flex-col lg:flex-row gap-8 lg:gap-12 flex-1 relative">
+              {/* Mobile Filter Toggle */}
+              <button
+                onClick={() => setShowMobileFilters(true)}
+                className="lg:hidden flex items-center justify-center gap-3 bg-white/5 border border-white/10 p-4 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-white/10 transition-all active:scale-95"
+              >
+                <Layers size={18} className="text-orange-500" />
+                Filtrar Búsqueda
+              </button>
+
+              <aside className={`fixed inset-0 z-[150] bg-black/98 lg:relative lg:inset-auto lg:z-0 lg:bg-transparent transition-transform duration-500 lg:translate-x-0 lg:w-[360px] shrink-0 ${showMobileFilters ? 'translate-x-0' : '-translate-x-full'}`}>
+                <div className="lg:hidden h-20 flex items-center justify-between px-6 border-b border-white/5">
+                  <h4 className="font-black uppercase italic tracking-tighter">Opciones de Filtro</h4>
+                  <button onClick={() => setShowMobileFilters(false)} className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center"><X size={20} /></button>
+                </div>
+                <div className="sticky top-0 lg:top-32 max-h-screen lg:max-h-[calc(140vh-160px)] overflow-y-auto no-scrollbar px-6 lg:px-0 py-8 lg:py-0 pr-2">
                   <FilterSidebar filters={filters} setFilters={setFilters} onClear={() => setFilters(initialFilters)} />
+                  <div className="lg:hidden h-32" /> {/* Bottom spacing for mobile */}
                 </div>
               </aside>
               <main className="flex-1 space-y-12">
@@ -659,9 +676,9 @@ const ExpandableCategory = ({ label, icon, properties, onPropertyClick, onSeeMor
               <div
                 key={p.id}
                 onClick={() => onPropertyClick(p)}
-                className="group/card bg-black/40 border border-white/5 rounded-3xl p-5 flex gap-5 cursor-pointer hover:border-orange-500/30 hover:bg-black/60 transition-all shadow-xl"
+                className="group/card bg-black/40 border border-white/5 rounded-2xl md:rounded-3xl p-3 md:p-5 flex gap-3 md:gap-5 cursor-pointer hover:border-orange-500/30 hover:bg-black/60 transition-all shadow-xl"
               >
-                <div className="w-32 h-32 shrink-0 rounded-2xl overflow-hidden relative">
+                <div className="w-24 h-24 md:w-32 md:h-32 shrink-0 rounded-xl md:rounded-2xl overflow-hidden relative">
                   <img
                     src={p.images[0]}
                     className="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-700"
@@ -670,18 +687,18 @@ const ExpandableCategory = ({ label, icon, properties, onPropertyClick, onSeeMor
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 </div>
-                <div className="flex-1 flex flex-col justify-between py-1">
+                <div className="flex-1 flex flex-col justify-between py-1 min-w-0">
                   <div>
-                    <h5 className="text-lg font-black text-white line-clamp-1 italic uppercase tracking-tighter">{p.title}</h5>
-                    <p className="text-[9px] font-black uppercase text-gray-500 tracking-widest mt-1">
-                      <MapPin size={10} className="inline mr-1 text-orange-500" /> {p.neighborhood}, {p.city}
+                    <h5 className="text-[13px] md:text-lg font-black text-white line-clamp-1 italic uppercase tracking-tighter leading-tight">{p.title}</h5>
+                    <p className="text-[8px] md:text-[9px] font-black uppercase text-gray-500 tracking-widest mt-0.5 md:mt-1 truncate">
+                      <MapPin size={8} className="inline mr-1 text-orange-500" /> {p.neighborhood}
                     </p>
                   </div>
-                  <div className="flex items-end justify-between">
-                    <span className="text-xl font-black text-orange-500 italic uppercase">
+                  <div className="flex items-end justify-between gap-2">
+                    <span className="text-base md:text-xl font-black text-orange-500 italic uppercase">
                       {p.currency} {p.price.toLocaleString()}
                     </span>
-                    <div className="flex items-center gap-3 text-[9px] font-black uppercase text-gray-600">
+                    <div className="hidden sm:flex items-center gap-3 text-[9px] font-black uppercase text-gray-600">
                       <span className="flex items-center gap-1"><Maximize size={12} /> {p.area}m²</span>
                       <span className="flex items-center gap-1"><Bed size={12} /> {p.bedrooms || '-'}D</span>
                     </div>
@@ -823,7 +840,7 @@ const HorizontalCatalogCard: React.FC<{ property: Property, onClick: () => void 
 
   return (
     <div onClick={onClick} className="group bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[2.5rem] overflow-hidden flex flex-col md:flex-row md:h-[420px] transition-all duration-500 hover:border-orange-500/30 hover:shadow-3xl cursor-pointer">
-      <div className="relative w-full md:w-[480px] h-[340px] md:h-full shrink-0 overflow-hidden bg-white/5">
+      <div className="relative w-full md:w-[480px] h-[240px] md:h-full shrink-0 overflow-hidden bg-white/5">
         <img
           src={property.images[currentImg]}
           className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
@@ -962,9 +979,9 @@ const PropertyDetailPage: React.FC<{ property: Property, onClose: () => void, on
               <Sparkles className="text-orange-500" size={32} />
               <h4 className="text-3xl font-black uppercase tracking-tighter italic text-white">Asesor AI Premium</h4>
             </div>
-            <div className="flex gap-4">
-              <input type="text" placeholder="Haz una pregunta sobre esta propiedad o proyecto..." className="flex-1 bg-black/40 border border-white/10 p-5 rounded-2xl font-bold text-sm outline-none focus:border-orange-500 text-white" value={aiMessage} onChange={(e) => setAiMessage(e.target.value)} />
-              <button onClick={onAiConsult} className="bg-orange-600 text-white px-10 rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl hover:bg-orange-700 transition-all">Consultar</button>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <input type="text" placeholder="Haz una pregunta..." className="flex-1 bg-black/40 border border-white/10 p-5 rounded-2xl font-bold text-sm outline-none focus:border-orange-500 text-white" value={aiMessage} onChange={(e) => setAiMessage(e.target.value)} />
+              <button onClick={onAiConsult} className="bg-orange-600 text-white py-4 md:py-0 px-10 rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl hover:bg-orange-700 transition-all">Consultar</button>
             </div>
             {aiResponse && <div className="mt-8 p-8 bg-black/60 border border-white/5 rounded-3xl italic text-gray-400 text-sm leading-relaxed border-l-8 border-orange-500 animate-in slide-in-from-left-4">{aiResponse}</div>}
           </div>

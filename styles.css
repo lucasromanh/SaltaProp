@@ -7,10 +7,16 @@
     box-sizing: border-box;
 }
 
+/* Global scale for desktop only to match user preference */
+@media (min-width: 1025px) {
+    html {
+        zoom: 0.67;
+    }
+}
+
 /* Smooth scrolling */
 html {
     scroll-behavior: smooth;
-    zoom: 0.67;
 }
 
 /* Prevent horizontal scroll */
