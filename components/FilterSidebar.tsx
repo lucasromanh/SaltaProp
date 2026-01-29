@@ -1,14 +1,14 @@
 
 import React, { useState } from 'react';
-import { 
-  X, 
-  ChevronDown, 
-  ChevronUp, 
-  SlidersHorizontal, 
-  Search, 
-  MapPin, 
-  Video, 
-  RotateCw, 
+import {
+  X,
+  ChevronDown,
+  ChevronUp,
+  SlidersHorizontal,
+  Search,
+  MapPin,
+  Video,
+  RotateCw,
   Layout,
   Plus
 } from 'lucide-react';
@@ -19,14 +19,15 @@ interface FilterSidebarProps {
   filters: FilterState;
   setFilters: (f: FilterState) => void;
   onClear: () => void;
+  onClose?: () => void;
 }
 
-export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilters, onClear }) => {
+export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilters, onClear, onClose }) => {
   const [expandedSections, setExpandedSections] = useState<string[]>(['operacion', 'inmueble', 'habitaciones', 'superficie', 'ambientes', 'publicacion']);
   const [showAllAntiguedad, setShowAllAntiguedad] = useState(false);
 
   const toggleSection = (id: string) => {
-    setExpandedSections(prev => 
+    setExpandedSections(prev =>
       prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]
     );
   };
@@ -50,12 +51,12 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
   const RadioItem = ({ label, value, current, name, onChange }: any) => (
     <label className="flex items-center gap-3 cursor-pointer group py-1">
       <div className="relative flex items-center justify-center">
-        <input 
-          type="radio" 
-          name={name} 
-          checked={current === value} 
+        <input
+          type="radio"
+          name={name}
+          checked={current === value}
           onChange={() => onChange(value)}
-          className="appearance-none w-5 h-5 rounded-full border border-white/20 checked:border-orange-600 transition-all" 
+          className="appearance-none w-5 h-5 rounded-full border border-white/20 checked:border-orange-600 transition-all"
         />
         {current === value && <div className="absolute w-2.5 h-2.5 bg-orange-600 rounded-full" />}
       </div>
@@ -66,11 +67,11 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
   const CheckboxItem = ({ label, checked, onChange }: any) => (
     <label className="flex items-center gap-3 cursor-pointer group py-1">
       <div className="relative flex items-center justify-center">
-        <input 
-          type="checkbox" 
-          checked={checked} 
+        <input
+          type="checkbox"
+          checked={checked}
           onChange={onChange}
-          className="appearance-none w-5 h-5 rounded-md border border-white/20 checked:border-orange-600 transition-all" 
+          className="appearance-none w-5 h-5 rounded-md border border-white/20 checked:border-orange-600 transition-all"
         />
         {checked && <div className="absolute w-2.5 h-2.5 bg-orange-600 rounded-sm" />}
       </div>
@@ -80,25 +81,33 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
 
   const handleVerResultados = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (onClose) onClose();
   };
 
   return (
     <div className="w-full bg-[#0d0d0d] border border-white/10 rounded-[2rem] flex flex-col h-full shadow-2xl">
-      <div className="p-8 border-b border-white/5 flex items-center justify-between">
-        <h4 className="text-[12px] font-black uppercase tracking-[0.2em] flex items-center gap-3 text-white">
-          <SlidersHorizontal size={18} className="text-orange-500" /> Filtros
-        </h4>
-        <button onClick={onClear} className="text-[10px] font-black uppercase text-orange-600 hover:text-orange-400 transition-colors">Limpiar</button>
+      <div className="p-4 md:p-8 border-b border-white/5 flex items-center justify-between sticky top-0 bg-[#0d0d0d] z-10">
+        <div className="flex items-center gap-3">
+          {onClose && (
+            <button onClick={onClose} className="lg:hidden w-8 h-8 md:w-10 md:h-10 bg-white/5 rounded-full flex items-center justify-center mr-2">
+              <X size={18} className="text-gray-400" />
+            </button>
+          )}
+          <h4 className="text-[10px] md:text-[12px] font-black uppercase tracking-[0.2em] flex items-center gap-3 text-white">
+            <SlidersHorizontal size={16} className="text-orange-500" /> Filtros
+          </h4>
+        </div>
+        <button onClick={onClear} className="text-[9px] md:text-[10px] font-black uppercase text-orange-600 hover:text-orange-400 transition-colors">Limpiar</button>
       </div>
 
-      <div className="p-8 flex-1 space-y-10 custom-scrollbar overflow-y-auto">
+      <div className="p-4 md:p-8 flex-1 space-y-6 md:space-y-10 custom-scrollbar overflow-y-auto">
         {/* Operación */}
         <div className="space-y-4">
           <h5 className="text-[11px] font-black uppercase tracking-widest text-white">Operación</h5>
           <div className="flex rounded-xl overflow-hidden">
-            <OptionBtn label="Compra" value={TransactionType.BUY} current={filters.transaction} onClick={(v: any) => setFilters({...filters, transaction: v})} />
-            <OptionBtn label="Alquiler" value={TransactionType.RENT} current={filters.transaction} onClick={(v: any) => setFilters({...filters, transaction: v})} />
-            <OptionBtn label="Proyectos" value="PROYECTOS" current={filters.transaction} onClick={(v: any) => setFilters({...filters, transaction: v})} />
+            <OptionBtn label="Compra" value={TransactionType.BUY} current={filters.transaction} onClick={(v: any) => setFilters({ ...filters, transaction: v })} />
+            <OptionBtn label="Alquiler" value={TransactionType.RENT} current={filters.transaction} onClick={(v: any) => setFilters({ ...filters, transaction: v })} />
+            <OptionBtn label="Proyectos" value="PROYECTOS" current={filters.transaction} onClick={(v: any) => setFilters({ ...filters, transaction: v })} />
           </div>
         </div>
 
@@ -106,9 +115,9 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
         <div className="space-y-4">
           <h5 className="text-[11px] font-black uppercase tracking-widest text-white">Tipo de inmueble</h5>
           <div className="relative">
-            <select 
-              value={filters.type} 
-              onChange={(e) => setFilters({...filters, type: e.target.value as any})} 
+            <select
+              value={filters.type}
+              onChange={(e) => setFilters({ ...filters, type: e.target.value as any })}
               className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-[11px] font-bold text-white focus:border-orange-500 outline-none appearance-none"
             >
               <option value="" className="bg-black">Todos los tipos</option>
@@ -123,7 +132,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
           <h5 className="text-[11px] font-black uppercase tracking-widest text-white">Habitaciones</h5>
           <div className="flex rounded-xl overflow-hidden">
             {['1+', '2+', '3+', '4+', '5+'].map(val => (
-              <OptionBtn key={val} label={val} value={val} current={filters.bedrooms} onClick={(v: string) => setFilters({...filters, bedrooms: v})} />
+              <OptionBtn key={val} label={val} value={val} current={filters.bedrooms} onClick={(v: string) => setFilters({ ...filters, bedrooms: v })} />
             ))}
           </div>
         </div>
@@ -132,26 +141,26 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
         <div className="space-y-4">
           <h5 className="text-[11px] font-black uppercase tracking-widest text-white">Superficie</h5>
           <div className="flex gap-6">
-            <RadioItem label="Techada" value="Techada" current={filters.surfaceType} name="stype" onChange={(v: any) => setFilters({...filters, surfaceType: v})} />
-            <RadioItem label="Total" value="Total" current={filters.surfaceType} name="stype" onChange={(v: any) => setFilters({...filters, surfaceType: v})} />
+            <RadioItem label="Techada" value="Techada" current={filters.surfaceType} name="stype" onChange={(v: any) => setFilters({ ...filters, surfaceType: v })} />
+            <RadioItem label="Total" value="Total" current={filters.surfaceType} name="stype" onChange={(v: any) => setFilters({ ...filters, surfaceType: v })} />
           </div>
           <div className="flex gap-3 items-center">
             <div className="bg-white/5 border border-white/10 rounded-xl p-3 text-[11px] font-bold text-white flex items-center gap-1">
               m²
             </div>
-            <input 
-              type="number" 
-              placeholder="Desde" 
+            <input
+              type="number"
+              placeholder="Desde"
               className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-[11px] font-bold outline-none focus:border-orange-500 text-white"
               value={filters.surfaceMin}
-              onChange={(e) => setFilters({...filters, surfaceMin: e.target.value})}
+              onChange={(e) => setFilters({ ...filters, surfaceMin: e.target.value })}
             />
-            <input 
-              type="number" 
-              placeholder="Hasta" 
+            <input
+              type="number"
+              placeholder="Hasta"
               className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-[11px] font-bold outline-none focus:border-orange-500 text-white"
               value={filters.surfaceMax}
-              onChange={(e) => setFilters({...filters, surfaceMax: e.target.value})}
+              onChange={(e) => setFilters({ ...filters, surfaceMax: e.target.value })}
             />
           </div>
         </div>
@@ -161,7 +170,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
           <h5 className="text-[11px] font-black uppercase tracking-widest text-white">Baños</h5>
           <div className="flex rounded-xl overflow-hidden">
             {['1+', '2+', '3+', '4+', '5+'].map(val => (
-              <OptionBtn key={val} label={val} value={val} current={filters.bathrooms} onClick={(v: string) => setFilters({...filters, bathrooms: v})} />
+              <OptionBtn key={val} label={val} value={val} current={filters.bathrooms} onClick={(v: string) => setFilters({ ...filters, bathrooms: v })} />
             ))}
           </div>
         </div>
@@ -171,7 +180,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
           <h5 className="text-[11px] font-black uppercase tracking-widest text-white">Estacionamientos</h5>
           <div className="flex rounded-xl overflow-hidden">
             {['0', '1+', '2+', '3+', '4+'].map(val => (
-              <OptionBtn key={val} label={val} value={val} current={filters.parking} onClick={(v: string) => setFilters({...filters, parking: v})} />
+              <OptionBtn key={val} label={val} value={val} current={filters.parking} onClick={(v: string) => setFilters({ ...filters, parking: v })} />
             ))}
           </div>
         </div>
@@ -180,9 +189,9 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
         <div className="space-y-3">
           <h5 className="text-[11px] font-black uppercase tracking-widest text-white">Tipo de anunciante</h5>
           <div className="space-y-2">
-            <RadioItem label="Todos" value="Todos" current={filters.advertiserType} name="adv" onChange={(v: string) => setFilters({...filters, advertiserType: v})} />
-            <RadioItem label="Inmobiliaria" value="Inmobiliaria" current={filters.advertiserType} name="adv" onChange={(v: string) => setFilters({...filters, advertiserType: v})} />
-            <RadioItem label="Dueño directo" value="Dueño directo" current={filters.advertiserType} name="adv" onChange={(v: string) => setFilters({...filters, advertiserType: v})} />
+            <RadioItem label="Todos" value="Todos" current={filters.advertiserType} name="adv" onChange={(v: string) => setFilters({ ...filters, advertiserType: v })} />
+            <RadioItem label="Inmobiliaria" value="Inmobiliaria" current={filters.advertiserType} name="adv" onChange={(v: string) => setFilters({ ...filters, advertiserType: v })} />
+            <RadioItem label="Dueño directo" value="Dueño directo" current={filters.advertiserType} name="adv" onChange={(v: string) => setFilters({ ...filters, advertiserType: v })} />
           </div>
         </div>
 
@@ -191,20 +200,20 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
           <h5 className="text-[11px] font-black uppercase tracking-widest text-white">Antigüedad</h5>
           <div className="space-y-2">
             {['En construcción', 'A estrenar', 'Hasta 5 años', 'Más de 5 años'].map(a => (
-              <RadioItem key={a} label={a} value={a} current={filters.age} name="age" onChange={(v: string) => setFilters({...filters, age: v})} />
+              <RadioItem key={a} label={a} value={a} current={filters.age} name="age" onChange={(v: string) => setFilters({ ...filters, age: v })} />
             ))}
             {showAllAntiguedad && (
               <>
-                <RadioItem label="Hasta 10 años" value="Hasta 10 años" current={filters.age} name="age" onChange={(v: string) => setFilters({...filters, age: v})} />
-                <RadioItem label="Más de 20 años" value="Más de 20 años" current={filters.age} name="age" onChange={(v: string) => setFilters({...filters, age: v})} />
+                <RadioItem label="Hasta 10 años" value="Hasta 10 años" current={filters.age} name="age" onChange={(v: string) => setFilters({ ...filters, age: v })} />
+                <RadioItem label="Más de 20 años" value="Más de 20 años" current={filters.age} name="age" onChange={(v: string) => setFilters({ ...filters, age: v })} />
               </>
             )}
           </div>
-          <button 
+          <button
             onClick={() => setShowAllAntiguedad(!showAllAntiguedad)}
             className="text-[9px] font-black text-orange-500 uppercase flex items-center gap-1 hover:text-orange-400 transition-colors"
           >
-            {showAllAntiguedad ? 'Ver menos' : 'Ver más'} {showAllAntiguedad ? <ChevronUp size={10}/> : <ChevronDown size={10}/>}
+            {showAllAntiguedad ? 'Ver menos' : 'Ver más'} {showAllAntiguedad ? <ChevronUp size={10} /> : <ChevronDown size={10} />}
           </button>
         </div>
 
@@ -212,12 +221,12 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
         <div className="space-y-4">
           <div className="flex justify-between items-center cursor-pointer" onClick={() => toggleSection('publicacion')}>
             <h5 className="text-[11px] font-black uppercase tracking-widest text-white">Fecha de publicación</h5>
-            {expandedSections.includes('publicacion') ? <ChevronUp size={14}/> : <ChevronDown size={14}/>}
+            {expandedSections.includes('publicacion') ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </div>
           {expandedSections.includes('publicacion') && (
             <div className="space-y-2">
               {['Hoy', 'Última semana', 'Último mes', 'Cualquier fecha'].map(d => (
-                <RadioItem key={d} label={d} value={d} current={filters.pubDate} name="pubdate" onChange={(v: string) => setFilters({...filters, pubDate: v})} />
+                <RadioItem key={d} label={d} value={d} current={filters.pubDate} name="pubdate" onChange={(v: string) => setFilters({ ...filters, pubDate: v })} />
               ))}
             </div>
           )}
@@ -227,7 +236,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
         <div className="space-y-4">
           <div className="flex justify-between items-center cursor-pointer" onClick={() => toggleSection('general')}>
             <h5 className="text-[11px] font-black uppercase tracking-widest text-white">General</h5>
-            {expandedSections.includes('general') ? <ChevronUp size={14}/> : <ChevronDown size={14}/>}
+            {expandedSections.includes('general') ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </div>
           {expandedSections.includes('general') && (
             <div className="grid grid-cols-2 gap-y-2 gap-x-4">
@@ -242,7 +251,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
         <div className="space-y-4">
           <div className="flex justify-between items-center cursor-pointer" onClick={() => toggleSection('ambientes')}>
             <h5 className="text-[11px] font-black uppercase tracking-widest text-white">Ambientes</h5>
-            {expandedSections.includes('ambientes') ? <ChevronUp size={14}/> : <ChevronDown size={14}/>}
+            {expandedSections.includes('ambientes') ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </div>
           {expandedSections.includes('ambientes') && (
             <div className="grid grid-cols-2 gap-y-2 gap-x-4">
@@ -257,7 +266,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
         <div className="space-y-4">
           <div className="flex justify-between items-center cursor-pointer" onClick={() => toggleSection('exteriores')}>
             <h5 className="text-[11px] font-black uppercase tracking-widest text-white">Exteriores</h5>
-            {expandedSections.includes('exteriores') ? <ChevronUp size={14}/> : <ChevronDown size={14}/>}
+            {expandedSections.includes('exteriores') ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </div>
           {expandedSections.includes('exteriores') && (
             <div className="grid grid-cols-2 gap-y-2 gap-x-4">
@@ -272,7 +281,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
         <div className="space-y-4">
           <div className="flex justify-between items-center cursor-pointer" onClick={() => toggleSection('servicios')}>
             <h5 className="text-[11px] font-black uppercase tracking-widest text-white">Servicios</h5>
-            {expandedSections.includes('servicios') ? <ChevronUp size={14}/> : <ChevronDown size={14}/>}
+            {expandedSections.includes('servicios') ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </div>
           {expandedSections.includes('servicios') && (
             <div className="grid grid-cols-2 gap-y-2 gap-x-4">
@@ -287,18 +296,18 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
         <div className="space-y-4">
           <h5 className="text-[11px] font-black uppercase tracking-widest text-white">Multimedia</h5>
           <div className="flex flex-wrap gap-2">
-            <MediaBtn icon={<RotateCw size={14}/>} label="Recorrido 360" active={filters.multimedia.includes('360')} onClick={() => {}} />
-            <MediaBtn icon={<Video size={14}/>} label="Video" active={filters.multimedia.includes('Video')} onClick={() => {}} />
-            <MediaBtn icon={<Layout size={14}/>} label="Planos" active={filters.multimedia.includes('Planos')} onClick={() => {}} />
+            <MediaBtn icon={<RotateCw size={14} />} label="Recorrido 360" active={filters.multimedia.includes('360')} onClick={() => { }} />
+            <MediaBtn icon={<Video size={14} />} label="Video" active={filters.multimedia.includes('Video')} onClick={() => { }} />
+            <MediaBtn icon={<Layout size={14} />} label="Planos" active={filters.multimedia.includes('Planos')} onClick={() => { }} />
           </div>
         </div>
       </div>
 
-      <div className="p-8 border-t border-white/10 flex gap-4">
-        <button onClick={onClear} className="flex-1 py-4 text-[11px] font-black uppercase tracking-widest text-gray-400 hover:text-white transition-colors">Limpiar</button>
-        <button 
+      <div className="p-4 md:p-8 border-t border-white/10 flex gap-3 md:gap-4">
+        <button onClick={onClear} className="flex-1 py-3 md:py-4 text-[10px] md:text-[11px] font-black uppercase tracking-widest text-gray-400 hover:text-white transition-colors">Limpiar</button>
+        <button
           onClick={handleVerResultados}
-          className="flex-[2] bg-orange-600 text-white py-4 rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-xl shadow-orange-600/20 hover:bg-orange-700 transition-all"
+          className="flex-[2] bg-orange-600 text-white py-3 md:py-4 rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest shadow-xl shadow-orange-600/20 hover:bg-orange-700 transition-all"
         >
           Ver resultados
         </button>
@@ -308,7 +317,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
 };
 
 const MediaBtn = ({ icon, label, active, onClick }: any) => (
-  <button 
+  <button
     onClick={onClick}
     className={`flex items-center gap-2 px-4 py-3 rounded-xl border text-[9px] font-black uppercase transition-all ${active ? 'bg-orange-600 border-orange-600 text-white shadow-lg' : 'bg-white/5 border-white/10 text-gray-400 hover:border-orange-500/50'}`}
   >

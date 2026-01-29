@@ -23,7 +23,6 @@ export const MOCK_PROPERTIES: Property[] = [
     parking: 2,
     area: 240,
     images: [
-      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=1200',
       'https://images.unsplash.com/photo-1600607687940-4e524cb357bd?auto=format&fit=crop&q=80&w=1200',
       'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&q=80&w=1200',
       'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80&w=1200'
@@ -52,8 +51,8 @@ export const MOCK_PROPERTIES: Property[] = [
     area: 55,
     images: [
       'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1493246507139-91e8bef99c1e?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&q=80&w=1200'
+      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1493246507139-91e8bef99c1e?auto=format&fit=crop&q=80&w=1200'
     ],
     coordinates: [-24.785, -65.412],
     featured: false,
@@ -101,9 +100,9 @@ export const MOCK_PROPERTIES: Property[] = [
     parking: 1,
     area: 110,
     images: [
-      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1600607687940-4e524cb357bd?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&q=80&w=1200'
+      'https://images.unsplash.com/photo-1449156001437-3a1621dfbe2b?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1472224371017-08207f84aaae?auto=format&fit=crop&q=80&w=1200'
     ],
     coordinates: [-24.765, -65.395],
     featured: false,
@@ -129,8 +128,8 @@ export const MOCK_PROPERTIES: Property[] = [
     area: 75,
     images: [
       'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=1200'
+      'https://images.unsplash.com/photo-1545324418-f1d3ac1ef730?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&q=80&w=1200'
     ],
     coordinates: [-24.755, -65.410],
     featured: true,
@@ -153,9 +152,9 @@ export const MOCK_PROPERTIES: Property[] = [
     parking: 1,
     area: 110,
     images: [
-      'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1493246507139-91e8bef99c1e?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=1200'
+      'https://images.unsplash.com/photo-1574362848149-11496d93a7c7?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1512915922686-57c11ff9b6b9?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1515263487990-61b07816b324?auto=format&fit=crop&q=80&w=1200'
     ],
     coordinates: [-24.789, -65.412],
     featured: true,
@@ -178,9 +177,9 @@ export const MOCK_PROPERTIES: Property[] = [
     parking: 1,
     area: 52,
     images: [
-      'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&q=80&w=1200'
+      'https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&q=80&w=1200'
     ],
     coordinates: [-24.810, -65.420],
     featured: true,
@@ -206,7 +205,6 @@ export const MOCK_PROPERTIES: Property[] = [
     area: 550,
     images: [
       'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?auto=format&fit=crop&q=80&w=1200',
       'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=1200',
       'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=1200'
     ],
@@ -232,8 +230,8 @@ export const MOCK_PROPERTIES: Property[] = [
     area: 280,
     images: [
       'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1472224371017-08207f84aaae?auto=format&fit=crop&q=80&w=1200'
+      'https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1518731514757-550672190126?auto=format&fit=crop&q=80&w=1200'
     ],
     coordinates: [-24.750, -65.492],
     featured: false,
@@ -256,9 +254,9 @@ export const MOCK_PROPERTIES: Property[] = [
     parking: 1,
     area: 95,
     images: [
-      'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1493246507139-91e8bef99c1e?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&q=80&w=1200'
+      'https://images.unsplash.com/photo-1430285561322-7808604715df?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1494526585184-9d21bd805147?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-147585554637b-7913da227278?auto=format&fit=crop&q=80&w=1200'
     ],
     coordinates: [-24.748, -65.480],
     featured: true,
@@ -281,9 +279,9 @@ export const MOCK_PROPERTIES: Property[] = [
     parking: 2,
     area: 250,
     images: [
-      'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=1200'
+      'https://images.unsplash.com/photo-1613490492965-0fd51BA5e0ae?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1513584732867-c475d73ad927?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1472224371017-08207f84aaae?auto=format&fit=crop&q=80&w=1200'
     ],
     coordinates: [-24.740, -65.495],
     featured: true,
@@ -306,9 +304,9 @@ export const MOCK_PROPERTIES: Property[] = [
     parking: 0,
     area: 1500,
     images: [
-      'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=80&w=1200',
       'https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=80&w=1200'
+      'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=1200'
     ],
     coordinates: [-24.735, -65.505],
     featured: true,
@@ -335,7 +333,7 @@ export const MOCK_PROPERTIES: Property[] = [
     images: [
       'https://images.unsplash.com/photo-1416331108676-a22ccb276e35?auto=format&fit=crop&q=80&w=1200',
       'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1449156001437-3a1621dfbe2b?auto=format&fit=crop&q=80&w=1200'
+      'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c?auto=format&fit=crop&q=80&w=1200'
     ],
     coordinates: [-24.715, -65.415],
     featured: false,
@@ -359,8 +357,8 @@ export const MOCK_PROPERTIES: Property[] = [
     area: 80,
     images: [
       'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&q=80&w=1200'
+      'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&q=80&w=1200'
     ],
     coordinates: [-24.710, -65.410],
     featured: false,
@@ -383,9 +381,9 @@ export const MOCK_PROPERTIES: Property[] = [
     parking: 0,
     area: 1200,
     images: [
-      'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=1200',
       'https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=80&w=1200'
+      'https://images.unsplash.com/photo-1443628574182-f1406001497c?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1464371307474-94775d5069b2?auto=format&fit=crop&q=80&w=1200'
     ],
     coordinates: [-24.705, -65.405],
     featured: true,
@@ -409,8 +407,8 @@ export const MOCK_PROPERTIES: Property[] = [
     area: 800,
     images: [
       'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?auto=format&fit=crop&q=80&w=1200'
+      'https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&q=80&w=1200'
     ],
     coordinates: [-24.720, -65.425],
     featured: true,
@@ -433,9 +431,9 @@ export const MOCK_PROPERTIES: Property[] = [
     parking: 1,
     area: 120,
     images: [
+      'https://images.unsplash.com/photo-1512914890251-2df96a933920?auto=format&fit=crop&q=80&w=1200',
       'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=1200'
+      'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=1200'
     ],
     coordinates: [-24.718, -65.418],
     featured: true,
@@ -460,9 +458,9 @@ export const MOCK_PROPERTIES: Property[] = [
     parking: 5,
     area: 450,
     images: [
-      'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=1200'
+      'https://images.unsplash.com/photo-1528914441525-095166297371?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200'
     ],
     coordinates: [-26.073, -65.976],
     featured: true,
@@ -510,9 +508,9 @@ export const MOCK_PROPERTIES: Property[] = [
     parking: 0,
     area: 2500,
     images: [
-      'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=1200'
+      'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&q=80&w=1200'
     ],
     coordinates: [-26.065, -65.965],
     featured: true,
@@ -535,9 +533,9 @@ export const MOCK_PROPERTIES: Property[] = [
     parking: 0,
     area: 3000,
     images: [
-      'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=1200'
+      'https://images.unsplash.com/photo-1524314112e00-ce329641796d?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1512403735658-22333d9077ce?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&q=80&w=1200'
     ],
     coordinates: [-26.080, -65.980],
     featured: true,
@@ -560,7 +558,7 @@ export const MOCK_PROPERTIES: Property[] = [
     parking: 2,
     area: 180,
     images: [
-      'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&q=80&w=1200',
       'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?auto=format&fit=crop&q=80&w=1200',
       'https://images.unsplash.com/photo-1472224371017-08207f84aaae?auto=format&fit=crop&q=80&w=1200'
     ],

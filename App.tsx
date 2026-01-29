@@ -38,12 +38,14 @@ import {
   Youtube,
   HardHat,
   Info,
-  ChevronUp
+  ChevronUp,
+  Play
 } from 'lucide-react';
 import { Property, PropertyType, TransactionType, FilterState } from './types';
 import { MOCK_PROPERTIES, SALTA_CITIES } from './constants';
 import { PanoramicViewer, VideoTour } from './components/PropertyViewers';
 import { MortgageCalculator, CurrencyWidget } from './components/FloatingUI';
+import { PropertyPlayer } from './components/PropertyPlayer';
 import { FilterSidebar } from './components/FilterSidebar';
 import { getPropertyAdvice } from './services/geminiService';
 
@@ -142,14 +144,14 @@ const LeafletMap: React.FC<{ property: Property }> = ({ property }) => {
 };
 
 /* --- COMPONENTE FOOTER GLOBAL --- */
-const GlobalFooter = () => (
+const GlobalFooter = ({ onLinkClick }: { onLinkClick: (link: string) => void }) => (
   <footer className="bg-[#030303] pt-24 pb-12 border-t border-white/5">
     <div className="container mx-auto px-6">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-24">
-        <FooterLinks title="Venta" links={['Casas en San Lorenzo', 'Deptos en Salta Capital', 'Terrenos en Vaqueros', 'Fincas en Cafayate']} />
-        <FooterLinks title="Alquiler" links={['Deptos en Tres Cerritos', 'Casas en Grand Bourg', 'Locales en el Centro', 'Alquiler temporario Cachi']} />
-        <FooterLinks title="Búsquedas Populares" links={['Dptos en venta con piscina', 'Casas con quincho', 'Barrios privados exclusivos', 'Oportunidades Cachi']} />
-        <FooterLinks title="Inmuebles" links={['Tasaciones Salta', 'Inmobiliarias Salta', 'Guía de barrios', 'Inversiones en Salta']} />
+        <FooterLinks title="Venta" links={['Casas en San Lorenzo', 'Deptos en Salta Capital', 'Terrenos en Vaqueros', 'Fincas en Cafayate']} onLinkClick={onLinkClick} />
+        <FooterLinks title="Alquiler" links={['Deptos en Tres Cerritos', 'Casas en Grand Bourg', 'Locales en el Centro', 'Alquiler temporario Cachi']} onLinkClick={onLinkClick} />
+        <FooterLinks title="Búsquedas Populares" links={['Dptos en venta con piscina', 'Casas con quincho', 'Barrios privados exclusivos', 'Oportunidades Cachi']} onLinkClick={onLinkClick} />
+        <FooterLinks title="Inmuebles" links={['Tasaciones Salta', 'Inmobiliarias Salta', 'Guía de barrios', 'Inversiones en Salta']} onLinkClick={onLinkClick} />
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-start gap-12 pt-16 border-t border-white/5">
@@ -215,6 +217,7 @@ const App: React.FC = () => {
   const [aiResponse, setAiResponse] = useState('');
   const [searchSuggestions, setSearchSuggestions] = useState<string[]>([]);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [showPlayer, setShowPlayer] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -225,6 +228,10 @@ const App: React.FC = () => {
   useEffect(() => {
     setCurrentPage(1);
   }, [filters]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [view, selectedProperty]);
 
   const filteredProperties = useMemo(() => {
     return MOCK_PROPERTIES.filter(p => {
@@ -250,7 +257,44 @@ const App: React.FC = () => {
   const handleAiConsult = async () => {
     if (!aiMessage) return;
     setAiResponse('Pensando...');
-    const res = await getPropertyAdvice(aiMessage, selectedProperty?.title);
+
+    // 1. Current Property Context
+    const propertyContext = selectedProperty ? `
+      ESTÁS EN LA FICHA DE: "${selectedProperty.title}"
+      TIPO: ${selectedProperty.type}
+      PRECIO: ${selectedProperty.currency} ${selectedProperty.price.toLocaleString()}
+      DIRECCIÓN EXACTA: ${selectedProperty.address}
+      UBICACIÓN: ${selectedProperty.neighborhood}, ${selectedProperty.city}
+      CARACTERÍSTICAS: ${selectedProperty.bedrooms} dorm, ${selectedProperty.bathrooms} baños, ${selectedProperty.area} m2.
+      DESCRIPCIÓN: ${selectedProperty.description}
+    ` : 'El usuario está en el catálogo general.';
+
+    // 2. Catalog Brief (to answer "more expensive/cheaper" questions)
+    const catalogBrief = MOCK_PROPERTIES
+      .filter(p => p.id !== selectedProperty?.id)
+      .slice(0, 10) // Limit to avoid token clutter
+      .map(p => `- ${p.title} en ${p.neighborhood}: ${p.currency} ${p.price.toLocaleString()} (${p.type})`)
+      .join('\n');
+
+    // 3. SaltaProp Agency Info
+    const agencyInfo = `
+      SALTA PROP: Agencia líder en Salta. 
+      OFICINA CENTRAL: Av. Belgrano 1234, Salta Capital.
+      WHATSAPP: +54 387 123 4567
+      SERVICIOS: Tasaciones, Ventas, Alquileres, Administración y Proyectos en Pozo.
+    `;
+
+    const fullContext = `
+      ${propertyContext}
+      ---
+      OTRAS PROPIEDADES DISPONIBLES (Para comparar):
+      ${catalogBrief}
+      ---
+      INFORMACIÓN DE LA AGENCIA:
+      ${agencyInfo}
+    `;
+
+    const res = await getPropertyAdvice(aiMessage, fullContext);
     setAiResponse(res || '');
   };
 
@@ -261,6 +305,8 @@ const App: React.FC = () => {
   };
 
   const openProperty = (p: Property) => {
+    setAiMessage('');
+    setAiResponse('');
     setSelectedProperty(p);
     setView('DETAIL');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -283,9 +329,9 @@ const App: React.FC = () => {
 
   // Reusable sections
   const InterestListsSection = () => (
-    <section className="py-24 bg-white/[0.01]">
+    <section className="py-16 md:py-24 bg-white/[0.01]">
       <div className="container mx-auto px-6">
-        <h3 className="text-2xl font-black mb-12 uppercase italic tracking-tighter">Listados que te pueden interesar</h3>
+        <h3 className="text-xl md:text-2xl font-black mb-8 md:mb-12 uppercase italic tracking-tighter">Listados que te pueden interesar</h3>
         <div className="space-y-6">
           <ExpandableCategory
             label="Dptos más vistos"
@@ -301,7 +347,7 @@ const App: React.FC = () => {
           <ExpandableCategory
             label="Nuevos Publicados"
             icon={<Clock className="text-orange-500" />}
-            properties={MOCK_PROPERTIES.slice(0, 2)}
+            properties={MOCK_PROPERTIES.filter(p => ['1', '3'].includes(p.id))}
             onPropertyClick={openProperty}
             onSeeMore={() => {
               setFilters(initialFilters);
@@ -312,7 +358,7 @@ const App: React.FC = () => {
           <ExpandableCategory
             label="Bajos de Precio"
             icon={<TrendingDown className="text-emerald-500" />}
-            properties={MOCK_PROPERTIES.sort((a, b) => a.price - b.price).slice(0, 2)}
+            properties={MOCK_PROPERTIES.filter(p => ['P6', 'R2'].includes(p.id))}
             onPropertyClick={openProperty}
             onSeeMore={() => {
               setFilters(initialFilters);
@@ -323,7 +369,7 @@ const App: React.FC = () => {
           <ExpandableCategory
             label="Proyectos en Pozo"
             icon={<Layers className="text-purple-500" />}
-            properties={MOCK_PROPERTIES.filter(p => p.transaction === TransactionType.PROJECTS).slice(0, 2)}
+            properties={MOCK_PROPERTIES.filter(p => ['P1', 'P5'].includes(p.id))}
             onPropertyClick={openProperty}
             onSeeMore={() => {
               setFilters({ ...initialFilters, transaction: TransactionType.PROJECTS });
@@ -336,35 +382,48 @@ const App: React.FC = () => {
     </section>
   );
 
-  const FeaturedProjectsSection = () => (
-    <section className="py-32 bg-[#080808]">
-      <div className="container mx-auto px-6">
-        <h3 className="text-4xl font-black text-center mb-12 uppercase italic tracking-tighter">Proyectos destacados por zona</h3>
-        <div className="flex justify-center gap-4 mb-16 overflow-x-auto no-scrollbar pb-4">
-          {['Salta Capital', 'San Lorenzo', 'Vaqueros', 'Cafayate'].map(zone => (
-            <button
-              key={zone}
-              onClick={() => setActiveProjectZone(zone)}
-              className={`px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all border ${activeProjectZone === zone ? 'bg-orange-600 border-orange-600 text-white' : 'border-white/10 text-gray-500 hover:border-white/30'}`}
-            >
-              {zone}
-            </button>
-          ))}
+  const FeaturedProjectsSection = () => {
+    const handleZoneClick = (zone: string) => {
+      setActiveProjectZone(zone);
+    };
+
+    return (
+      <section className="py-16 md:py-32 bg-[#080808]">
+        <div className="container mx-auto px-6">
+          <h3 className="text-2xl md:text-4xl font-black text-center mb-8 md:mb-12 uppercase italic tracking-tighter leading-tight">Proyectos destacados por zona</h3>
+
+          {/* Botones de zona - Grid 2x2 en móvil */}
+          <div className="mb-10 md:mb-16">
+            <div className="grid grid-cols-2 md:flex md:justify-center gap-3 md:gap-4">
+              {['Salta Capital', 'San Lorenzo', 'Vaqueros', 'Cafayate'].map(zone => (
+                <button
+                  key={zone}
+                  type="button"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => handleZoneClick(zone)}
+                  className={`px-4 md:px-8 py-2.5 md:py-3 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all border whitespace-nowrap ${activeProjectZone === zone ? 'bg-orange-600 border-orange-600 text-white' : 'border-white/10 text-gray-500 hover:border-white/30'}`}
+                >
+                  {zone}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {MOCK_PROPERTIES.filter(p => p.transaction === TransactionType.PROJECTS && (p.city === activeProjectZone)).slice(0, 3).map(p => (
+              <ProjectCard key={p.id} project={p} onClick={() => openProperty(p)} />
+            ))}
+          </div>
+          <div className="mt-12 md:mt-16 text-center">
+            <button onClick={() => { setFilters({ ...initialFilters, transaction: TransactionType.PROJECTS, city: activeProjectZone }); setView('LISTINGS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="px-10 py-4 border border-emerald-500/50 text-emerald-500 font-black uppercase text-[10px] tracking-[0.2em] rounded-2xl hover:bg-emerald-500 hover:text-white transition-all shadow-xl shadow-emerald-500/10">Ver más proyectos</button>
+          </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {MOCK_PROPERTIES.filter(p => p.transaction === TransactionType.PROJECTS && (p.city === activeProjectZone)).slice(0, 3).map(p => (
-            <ProjectCard key={p.id} project={p} onClick={() => openProperty(p)} />
-          ))}
-        </div>
-        <div className="mt-16 text-center">
-          <button onClick={() => { setFilters({ ...initialFilters, transaction: TransactionType.PROJECTS, city: activeProjectZone }); setView('LISTINGS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="px-10 py-4 border border-emerald-500/50 text-emerald-500 font-black uppercase text-[10px] tracking-[0.2em] rounded-2xl hover:bg-emerald-500 hover:text-white transition-all shadow-xl shadow-emerald-500/10">Ver más proyectos</button>
-        </div>
-      </div>
-    </section>
-  );
+      </section>
+    );
+  };
 
   return (
-    <div className="min-h-screen selection:bg-orange-500/30 text-white bg-[#050505] flex flex-col">
+    <div className="min-h-screen selection:bg-orange-500/30 text-white bg-[#050505] flex flex-col overflow-x-hidden">
       {/* Auth Modal */}
       {authModal && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/90 backdrop-blur-xl">
@@ -391,13 +450,21 @@ const App: React.FC = () => {
           </div>
 
           <div className="hidden lg:flex items-center gap-10 text-[10px] font-black uppercase tracking-[0.25em]">
-            <button onClick={() => { setFilters({ ...initialFilters, transaction: TransactionType.BUY }); setView('LISTINGS'); }} className="hover:text-orange-500 transition-colors">Compra</button>
-            <button onClick={() => { setFilters({ ...initialFilters, transaction: TransactionType.RENT }); setView('LISTINGS'); }} className="hover:text-orange-500 transition-colors">Alquiler</button>
-            <button onClick={() => { setFilters({ ...initialFilters, transaction: TransactionType.PROJECTS }); setView('LISTINGS'); }} className="hover:text-orange-500 transition-colors">Proyectos</button>
-            <button onClick={() => { setFilters({ ...initialFilters, isPrivateBarrio: true }); setView('LISTINGS'); }} className="hover:text-orange-500 transition-colors">Barrios Privados</button>
+            <button onClick={() => { setFilters({ ...initialFilters, transaction: TransactionType.BUY }); setView('LISTINGS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-orange-500 transition-colors">Compra</button>
+            <button onClick={() => { setFilters({ ...initialFilters, transaction: TransactionType.RENT }); setView('LISTINGS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-orange-500 transition-colors">Alquiler</button>
+            <button onClick={() => { setFilters({ ...initialFilters, transaction: TransactionType.PROJECTS }); setView('LISTINGS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-orange-500 transition-colors">Proyectos</button>
+            <button onClick={() => { setFilters({ ...initialFilters, isPrivateBarrio: true }); setView('LISTINGS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-orange-500 transition-colors">Barrios Privados</button>
           </div>
 
           <div className="flex items-center gap-3 md:gap-6">
+            <button
+              onClick={() => setShowPlayer(true)}
+              className="group relative flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-orange-600/10 border border-orange-600/20 rounded-full text-orange-600 hover:bg-orange-600 hover:text-white transition-all shadow-xl shadow-orange-600/5"
+              title="Iniciar Showcase de Propiedades"
+            >
+              <Play size={18} fill="currentColor" className="ml-1" />
+              <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 bg-black text-white text-[8px] font-black py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">MODO SHOWCASE</span>
+            </button>
             <button onClick={() => { setFilters({ ...initialFilters, transaction: TransactionType.BUY }); setView('LISTINGS'); }} className="lg:hidden w-10 h-10 bg-white/5 rounded-full flex items-center justify-center"><Search size={18} /></button>
             <button onClick={() => setAuthModal('LOGIN')} className="bg-white text-black px-5 md:px-7 py-2 md:py-2.5 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-widest hover:bg-orange-600 hover:text-white transition-all shadow-xl">Ingresar</button>
           </div>
@@ -408,54 +475,54 @@ const App: React.FC = () => {
         {view === 'HOME' && (
           <div className="animate-in fade-in duration-700">
             {/* Hero Section */}
-            <section className="relative h-screen lg:h-[150vh] flex flex-col items-center justify-center overflow-hidden">
+            <section className="relative min-h-screen lg:h-[150vh] flex flex-col items-center justify-center overflow-hidden py-12 landscape:py-20">
               <div className="absolute inset-0 z-0">
                 <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=2400" className="w-full h-full object-cover opacity-60 scale-105 animate-slow-zoom" alt="Salta Background" />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-[#050505]" />
               </div>
               <div className="relative z-10 container mx-auto px-6 text-center max-w-5xl">
-                <h2 className="text-3xl md:text-8xl font-black mb-6 md:mb-16 leading-[1.1] tracking-tighter">Tu próximo hogar <br /><span className="text-orange-600 italic">está en Salta.</span></h2>
-                <div className="bg-white/[0.03] backdrop-blur-3xl p-4 md:p-8 rounded-[1.5rem] md:rounded-[3rem] border border-white/10 shadow-3xl mx-auto w-full max-w-[calc(100vw-3rem)]">
-                  <div className="flex gap-2 md:gap-4 mb-5 ml-0 md:ml-4 overflow-x-auto no-scrollbar pb-1 md:pb-0 justify-start md:justify-start">
+                <h2 className="text-3xl md:text-8xl font-black mb-6 md:mb-16 landscape:mb-8 leading-[1.1] tracking-tighter landscape:text-5xl">Tu próximo hogar <br /><span className="text-orange-600 italic">está en Salta.</span></h2>
+                <div className="bg-white/[0.03] backdrop-blur-3xl p-5 md:p-8 landscape:p-6 rounded-[1.5rem] md:rounded-[3rem] border border-white/10 shadow-3xl mx-auto w-full max-w-[calc(100vw-3rem)]">
+                  <div className="flex gap-2 md:gap-4 mb-6 ml-0 md:ml-4 overflow-x-auto no-scrollbar pb-1 md:pb-0 justify-start md:justify-start">
                     {[TransactionType.BUY, TransactionType.RENT, TransactionType.PROJECTS].map((t) => (
                       <button
                         key={t}
                         onClick={() => setFilters(prev => ({ ...prev, transaction: t as any }))}
-                        className={`shrink-0 px-4 md:px-6 py-2 rounded-full text-[8px] md:text-[10px] font-black uppercase tracking-[0.15em] md:tracking-[0.2em] transition-all ${filters.transaction === t ? 'bg-orange-600 text-white' : 'hover:bg-white/5 text-gray-400'}`}
+                        className={`shrink-0 px-5 md:px-6 py-2.5 md:py-2 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-[0.15em] md:tracking-[0.2em] transition-all ${filters.transaction === t ? 'bg-orange-600 text-white' : 'hover:bg-white/5 text-gray-400'}`}
                       >
                         {t}
                       </button>
                     ))}
                   </div>
-                  <div className="flex flex-col md:flex-row gap-2.5 md:gap-3 items-stretch md:items-center">
+                  <div className="flex flex-col md:flex-row gap-3 md:gap-3 items-stretch md:items-center">
                     <div className="relative w-full md:w-64">
                       <select
                         value={filters.type}
                         onChange={(e) => setFilters({ ...filters, type: e.target.value as any })}
-                        className="w-full bg-white/5 border border-white/10 text-white p-4 rounded-2xl font-bold text-sm outline-none focus:border-orange-500 cursor-pointer appearance-none"
+                        className="w-full bg-white/5 border border-white/10 text-white p-4 md:p-4 rounded-2xl font-bold text-base md:text-sm outline-none focus:border-orange-500 cursor-pointer appearance-none h-[72px] md:h-[56px]"
                       >
                         <option value="" className="bg-black">Tipo de inmueble</option>
                         {Object.values(PropertyType).map(pt => <option key={pt} value={pt} className="bg-black">{pt}</option>)}
                       </select>
                       <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" size={16} />
                     </div>
-                    <div className="flex-1 relative flex items-center bg-white/5 rounded-2xl h-[56px] border border-white/10 px-6 focus-within:border-orange-500 transition-all">
-                      <Search className="text-gray-500 shrink-0" size={20} />
+                    <div className="flex-1 relative flex items-center bg-white/5 rounded-2xl h-[72px] md:h-[56px] border border-white/10 px-5 md:px-6 py-4 md:py-0 focus-within:border-orange-500 transition-all gap-3">
+                      <Search className="text-gray-500 shrink-0" size={24} />
                       <input
                         type="text"
-                        placeholder="Barrio, calle o ciudad de Salta..."
-                        className="bg-transparent border-none outline-none w-full text-sm font-bold placeholder:text-gray-600 px-4"
+                        placeholder="Buscar ubicación..."
+                        className="bg-transparent border-none outline-none w-full text-base md:text-sm font-bold placeholder:text-white/60 placeholder:font-bold"
                         value={filters.search}
                         onChange={(e) => onSearchChange(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleSearchClick()}
                       />
                       {searchSuggestions.length > 0 && (
-                        <div className="absolute top-[64px] left-0 right-0 bg-[#111] border border-white/10 rounded-2xl overflow-hidden z-[150] shadow-2xl animate-in fade-in slide-in-from-top-2">
+                        <div className="absolute top-[80px] md:top-[64px] left-0 right-0 bg-[#111] border border-white/10 rounded-2xl overflow-hidden z-[150] shadow-2xl animate-in fade-in slide-in-from-top-2">
                           {searchSuggestions.map((suggestion) => (
                             <button
                               key={suggestion}
                               onClick={() => { setFilters({ ...filters, search: suggestion }); setSearchSuggestions([]); }}
-                              className="w-full text-left px-6 py-4 hover:bg-orange-600/20 text-sm font-bold border-b border-white/5 last:border-0 transition-colors flex items-center gap-3"
+                              className="w-full text-left px-5 md:px-6 py-4 md:py-4 hover:bg-orange-600/20 text-sm font-bold border-b border-white/5 last:border-0 transition-colors flex items-center gap-3"
                             >
                               <MapPin size={14} className="text-orange-500" />
                               {suggestion}
@@ -464,7 +531,7 @@ const App: React.FC = () => {
                         </div>
                       )}
                     </div>
-                    <button onClick={handleSearchClick} className="bg-orange-600 hover:bg-orange-700 text-white font-black px-12 h-[56px] rounded-2xl transition-all w-full md:w-auto text-xs uppercase tracking-widest shadow-xl shadow-orange-600/20">BUSCAR</button>
+                    <button onClick={handleSearchClick} className="bg-orange-600 hover:bg-orange-700 text-white font-black px-12 h-[72px] md:h-[56px] landscape:h-[56px] rounded-2xl transition-all w-full md:w-auto text-xs uppercase tracking-widest shadow-xl shadow-orange-600/20">BUSCAR</button>
                   </div>
                 </div>
               </div>
@@ -475,13 +542,13 @@ const App: React.FC = () => {
             <FeaturedProjectsSection />
 
             {/* Benefits Section */}
-            <section className="py-32 border-y border-white/5 bg-black/40">
+            <section className="py-16 md:py-32 border-y border-white/5 bg-black/40">
               <div className="container mx-auto px-6">
-                <div className="text-center mb-24">
-                  <h3 className="text-5xl font-black mb-4 tracking-tighter italic uppercase">Te acompañamos en cada paso</h3>
-                  <p className="text-gray-500 font-medium leading-relaxed max-w-2xl mx-auto">Desde la primera búsqueda hasta la entrega de llaves, SaltaProp es tu socio estratégico.</p>
+                <div className="text-center mb-12 md:mb-24">
+                  <h3 className="text-2xl md:text-5xl font-black mb-3 md:mb-4 tracking-tighter italic uppercase leading-tight">Te acompañamos en cada paso</h3>
+                  <p className="text-sm md:text-base text-gray-500 font-medium leading-relaxed max-w-2xl mx-auto">Desde la primera búsqueda hasta la entrega de llaves, SaltaProp es tu socio estratégico.</p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-16">
+                <div className="grid grid-cols-1 md:grid-cols-4 landscape:grid-cols-2 gap-10 md:gap-16 landscape:gap-8">
                   <BenefitItem title="Búsqueda Inteligente" desc="Filtros diseñados para la realidad de Salta." icon={<Search size={32} />} />
                   <BenefitItem title="Mi Selección" desc="Guarda favoritos y recibe alertas al instante." icon={<Heart size={32} />} />
                   <BenefitItem title="Red de Expertos" desc="Conectamos con las mejores inmobiliarias locales." icon={<Navigation size={32} />} />
@@ -491,13 +558,13 @@ const App: React.FC = () => {
             </section>
 
             {/* Section: Tips para comprar un proyecto */}
-            <section className="py-32 bg-[#050505]">
+            <section className="py-16 md:py-32 bg-[#050505]">
               <div className="container mx-auto px-6">
-                <div className="mb-16">
-                  <h3 className="text-4xl font-black uppercase italic tracking-tighter mb-4">Tips para comprar un proyecto</h3>
-                  <p className="text-gray-500 font-medium">Te dejamos unos consejos para que tengas en cuenta a la hora de comprar un inmueble para vivir o como inversión.</p>
+                <div className="mb-10 md:mb-16">
+                  <h3 className="text-2xl md:text-4xl font-black uppercase italic tracking-tighter mb-3 md:mb-4 leading-tight">Tips para comprar un proyecto</h3>
+                  <p className="text-sm md:text-base text-gray-500 font-medium">Te dejamos unos consejos para que tengas en cuenta a la hora de comprar un inmueble para vivir o como inversión.</p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 landscape:grid-cols-2 gap-6 md:gap-8">
                   <TipItem num="1" title="Constructoras y antecedentes" desc="Es importante que investigues los antecedentes de la constructora y consultes sobre los detalles y calidad de las construcciones." />
                   <TipItem num="2" title="Tiempos de entrega" desc="Pregunta cuáles son los tiempos de entrega y en qué etapa de la construcción se encuentra el proyecto." />
                   <TipItem num="3" title="Permisos y habilitaciones" desc="Consulta si la obra cuenta con los permisos correspondientes, planos y si es posible escriturar una vez finalizada." />
@@ -507,12 +574,12 @@ const App: React.FC = () => {
             </section>
 
             {/* Developments CTA Section */}
-            <section className="py-32 container mx-auto px-6">
-              <div className="flex flex-col lg:flex-row items-center gap-20 bg-white/[0.02] p-12 lg:p-20 rounded-[4rem] border border-white/5 relative overflow-hidden group">
+            <section className="py-16 md:py-32 container mx-auto px-6">
+              <div className="flex flex-col lg:flex-row items-center gap-12 md:gap-20 bg-white/[0.02] p-8 md:p-12 lg:p-20 rounded-[2rem] md:rounded-[4rem] border border-white/5 relative overflow-hidden group">
                 <div className="absolute -top-24 -right-24 w-96 h-96 bg-orange-600/10 blur-[120px] rounded-full pointer-events-none" />
                 <div className="flex-1 relative z-10">
-                  <h3 className="text-5xl font-black mb-8 leading-tight tracking-tighter italic">¿Conoces nuestros <br />nuevos desarrollos?</h3>
-                  <p className="text-gray-400 text-lg mb-12 leading-relaxed">Descubre proyectos exclusivos en etapa de pozo y construcción avanzada con planes de financiación únicos en Salta.</p>
+                  <h3 className="text-2xl md:text-5xl font-black mb-6 md:mb-8 leading-tight tracking-tighter italic">¿Conoces nuestros <br />nuevos desarrollos?</h3>
+                  <p className="text-sm md:text-lg text-gray-400 mb-8 md:mb-12 leading-relaxed">Descubre proyectos exclusivos en etapa de pozo y construcción avanzada con planes de financiación únicos en Salta.</p>
                   <button onClick={() => { setFilters({ ...initialFilters, transaction: TransactionType.PROJECTS }); setView('LISTINGS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="bg-transparent border-2 border-orange-600 text-orange-600 hover:bg-orange-600 hover:text-white px-10 py-4 rounded-2xl font-black transition-all text-xs uppercase tracking-widest shadow-xl shadow-orange-600/10">
                     Ver Proyectos en Salta
                   </button>
@@ -525,16 +592,16 @@ const App: React.FC = () => {
             </section>
 
             {/* Oportunidades Destacadas (GLASS DARK) */}
-            <section className="py-24 bg-white/[0.01]">
+            <section className="py-16 md:py-24 bg-white/[0.01]">
               <div className="container mx-auto px-6">
-                <div className="flex justify-between items-end mb-16">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 md:mb-16 gap-4">
                   <div>
-                    <h4 className="text-orange-500 text-[10px] font-black uppercase tracking-[0.3em] mb-4">Selección Premium</h4>
-                    <h3 className="text-4xl font-black uppercase italic tracking-tighter">Oportunidades Destacadas</h3>
+                    <h4 className="text-orange-500 text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] mb-3 md:mb-4">Selección Premium</h4>
+                    <h3 className="text-2xl md:text-4xl font-black uppercase italic tracking-tighter leading-tight">Oportunidades Destacadas</h3>
                   </div>
-                  <button onClick={() => setView('LISTINGS')} className="text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-white flex items-center gap-2 transition-all">Ver todo el catálogo <ArrowRight size={14} /></button>
+                  <button onClick={() => { setFilters(initialFilters); setView('LISTINGS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-white flex items-center gap-2 transition-all">Ver todo el catálogo <ArrowRight size={14} /></button>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
                   {MOCK_PROPERTIES.filter(p => p.featured).slice(0, 4).map(p => (
                     <GridPropertyCard key={p.id} property={p} onClick={() => openProperty(p)} />
                   ))}
@@ -545,8 +612,8 @@ const App: React.FC = () => {
         )}
 
         {view === 'LISTINGS' && (
-          <div className="pt-32 min-h-screen bg-[#050505] animate-in fade-in duration-500 flex flex-col">
-            <div className="container mx-auto px-6 py-6 flex flex-col lg:flex-row gap-8 lg:gap-12 flex-1 relative">
+          <div className="pt-24 md:pt-32 landscape:pt-20 min-h-screen bg-[#050505] animate-in fade-in duration-500 flex flex-col">
+            <div className="container mx-auto px-6 py-6 landscape:py-4 flex flex-col lg:flex-row gap-8 lg:gap-12 flex-1 relative">
               {/* Mobile Filter Toggle */}
               <button
                 onClick={() => setShowMobileFilters(true)}
@@ -556,13 +623,14 @@ const App: React.FC = () => {
                 Filtrar Búsqueda
               </button>
 
-              <aside className={`fixed inset-0 z-[150] bg-black/98 lg:relative lg:inset-auto lg:z-0 lg:bg-transparent transition-transform duration-500 lg:translate-x-0 lg:w-[360px] shrink-0 ${showMobileFilters ? 'translate-x-0' : '-translate-x-full'}`}>
-                <div className="lg:hidden h-20 flex items-center justify-between px-6 border-b border-white/5">
-                  <h4 className="font-black uppercase italic tracking-tighter">Opciones de Filtro</h4>
-                  <button onClick={() => setShowMobileFilters(false)} className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center"><X size={20} /></button>
-                </div>
-                <div className="sticky top-0 lg:top-32 max-h-screen lg:max-h-[calc(140vh-160px)] overflow-y-auto no-scrollbar px-6 lg:px-0 py-8 lg:py-0 pr-2">
-                  <FilterSidebar filters={filters} setFilters={setFilters} onClear={() => setFilters(initialFilters)} />
+              <aside className={`fixed inset-0 z-[200] bg-black/98 lg:relative lg:inset-auto lg:z-0 lg:bg-transparent transition-transform duration-500 lg:translate-x-0 lg:w-[360px] shrink-0 ${showMobileFilters ? 'translate-x-0' : '-translate-x-full'}`}>
+                <div className="h-full overflow-y-auto no-scrollbar lg:sticky lg:top-32 lg:max-h-[calc(140vh-160px)]">
+                  <FilterSidebar
+                    filters={filters}
+                    setFilters={setFilters}
+                    onClear={() => setFilters(initialFilters)}
+                    onClose={() => setShowMobileFilters(false)}
+                  />
                   <div className="lg:hidden h-32" /> {/* Bottom spacing for mobile */}
                 </div>
               </aside>
@@ -626,8 +694,38 @@ const App: React.FC = () => {
         )}
       </main>
 
-      <GlobalFooter />
-      <CurrencyWidget />
+      <GlobalFooter onLinkClick={(link) => {
+        let newFilters = { ...initialFilters };
+        if (link.includes('San Lorenzo')) newFilters.city = 'San Lorenzo';
+        if (link.includes('Salta Capital')) newFilters.city = 'Salta Capital';
+        if (link.includes('Vaqueros')) newFilters.city = 'Vaqueros';
+        if (link.includes('Cafayate')) newFilters.city = 'Cafayate';
+        if (link.includes('Cachi')) newFilters.city = 'Cachi';
+
+        if (link.includes('Casas')) newFilters.type = PropertyType.HOUSE;
+        if (link.includes('Deptos') || link.includes('Dptos')) newFilters.type = PropertyType.APARTMENT;
+        if (link.includes('Terrenos')) newFilters.type = PropertyType.LAND;
+        if (link.includes('Locales')) newFilters.type = PropertyType.COMMERCIAL;
+
+        if (link.includes('Venta')) newFilters.transaction = TransactionType.BUY;
+        if (link.includes('Alquiler')) newFilters.transaction = TransactionType.RENT;
+
+        if (link.includes('piscina')) newFilters.selectedAmenities = ['Piscina'];
+        if (link.includes('quincho')) newFilters.selectedAmenities = ['Parrilla'];
+        if (link.includes('Barrios privados')) newFilters.isPrivateBarrio = true;
+
+        setFilters(newFilters);
+        setView('LISTINGS');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }} />
+      <CurrencyWidget view={view} />
+
+      {showPlayer && (
+        <PropertyPlayer
+          properties={MOCK_PROPERTIES}
+          onClose={() => setShowPlayer(false)}
+        />
+      )}
 
       <style>{`
         @keyframes slow-zoom { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
@@ -635,6 +733,8 @@ const App: React.FC = () => {
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
     </div>
   );
@@ -774,11 +874,20 @@ const CategoryLink = ({ label, icon, onClick }: { label: string, icon: React.Rea
   </div>
 );
 
-const FooterLinks = ({ title, links }: { title: string, links: string[] }) => (
+const FooterLinks = ({ title, links, onLinkClick }: { title: string, links: string[], onLinkClick: (s: string) => void }) => (
   <div>
-    <h6 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40 mb-8">{title}</h6>
+    <h6 className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-600 mb-8">{title}</h6>
     <ul className="space-y-4">
-      {links.map(l => <li key={l}><a href="#" className="text-xs font-bold text-gray-500 hover:text-orange-600 transition-colors">{l}</a></li>)}
+      {links.map(l => (
+        <li key={l}>
+          <button
+            onClick={() => onLinkClick(l)}
+            className="text-xs font-bold text-gray-500 hover:text-white transition-colors text-left"
+          >
+            {l}
+          </button>
+        </li>
+      ))}
     </ul>
   </div>
 );
@@ -797,7 +906,7 @@ const FooterCol = ({ title, items }: { title: string, items: string[] }) => (
 const GridPropertyCard: React.FC<{ property: Property, onClick: () => void }> = ({ property, onClick }) => (
   <div
     onClick={onClick}
-    className="group cursor-pointer bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[2.5rem] overflow-hidden flex flex-col transition-all duration-500 hover:-translate-y-2 hover:border-orange-500/50 hover:shadow-3xl shadow-2xl"
+    className="group cursor-pointer bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[2rem] md:rounded-[2.5rem] overflow-hidden flex flex-col transition-all duration-500 hover:-translate-y-2 hover:border-orange-500/50 hover:shadow-3xl shadow-2xl"
   >
     <div className="relative aspect-[4/5] overflow-hidden">
       <img
@@ -806,14 +915,16 @@ const GridPropertyCard: React.FC<{ property: Property, onClick: () => void }> = 
         alt={property.title}
         onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=800"; }}
       />
-      <div className="absolute top-5 left-5 bg-black/60 backdrop-blur-xl border border-white/10 text-white text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest">{property.transaction}</div>
+      <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-xl border border-white/10 text-white text-[8px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest">{property.transaction}</div>
     </div>
-    <div className="p-8 text-white">
-      <h4 className="text-2xl font-black mb-1 text-white italic uppercase tracking-tighter">{property.currency} {property.price.toLocaleString()}</h4>
-      <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-6 truncate">{property.neighborhood}, {property.city}</p>
-      <div className="flex gap-4 text-[9px] font-black uppercase text-gray-400 border-t border-white/5 pt-5">
-        <span className="flex items-center gap-1"><Maximize size={12} className="text-orange-500" /> {property.area} m²</span>
-        <span className="flex items-center gap-1"><Bed size={12} className="text-orange-500" /> {property.bedrooms || '-'} Dorm.</span>
+    <div className="p-5 md:p-6 text-white flex-1 flex flex-col justify-between">
+      <div>
+        <h4 className="text-xl md:text-2xl font-black mb-1 text-white italic uppercase tracking-tighter">{property.currency} {property.price.toLocaleString()}</h4>
+        <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-gray-500 mb-4 truncate">{property.neighborhood}, {property.city}</p>
+      </div>
+      <div className="flex gap-3 md:gap-4 text-[8px] md:text-[9px] font-black uppercase text-gray-400 border-t border-white/5 pt-4 mt-auto">
+        <span className="flex items-center gap-1"><Maximize size={10} className="text-orange-500 md:w-3 md:h-3" /> {property.area} m²</span>
+        <span className="flex items-center gap-1"><Bed size={10} className="text-orange-500 md:w-3 md:h-3" /> {property.bedrooms || '-'} Dorm.</span>
       </div>
     </div>
   </div>
@@ -930,75 +1041,130 @@ const PropertyDetailPage: React.FC<{ property: Property, onClose: () => void, on
         <DetailStat icon={<Calendar />} label="Publicado" value="Reciente" />
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-16">
-        <div className="flex-1">
-          <div className="mb-20">
-            <h3 className="text-2xl font-black uppercase italic mb-8 border-b-2 border-orange-500 w-fit">Memoria Descriptiva</h3>
-            <p className="text-gray-400 text-xl font-medium leading-relaxed max-w-4xl">{property.description}</p>
+      {/* Layout de Contenido Centrado y Ancho Completo */}
+      <div className="max-w-4xl mx-auto">
+        <div className="mb-20">
+          <h3 className="text-2xl font-black uppercase italic mb-8 border-b-2 border-orange-500 w-fit">Memoria Descriptiva</h3>
+          <p className="text-gray-400 text-xl font-medium leading-relaxed">{property.description}</p>
+        </div>
+
+        {/* Tarjeta de Agente Integrada en el flujo */}
+        <div className="bg-[#0d0d0d] border border-white/10 rounded-[3rem] p-8 md:p-12 mb-20 flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl">
+          <div className="flex items-center gap-6">
+            <div className="w-20 h-20 bg-white/5 rounded-2xl flex items-center justify-center text-gray-600"><User size={40} /></div>
+            <div>
+              <h5 className="text-xl font-black uppercase italic text-white">Agente SaltaProp</h5>
+              <p className="text-orange-500 text-xs font-black uppercase tracking-widest">Especialista Verificado</p>
+            </div>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+            <a
+              href={`mailto:lucasromanh@gmail.com?subject=Consulta sobre: ${property.title}&body=Hola, me gustaría recibir más información y el PDF de detalles sobre la propiedad "${property.title}" en ${property.neighborhood}.`}
+              className="bg-orange-600 text-white px-10 py-4 rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl hover:bg-orange-700 transition-all text-center"
+            >
+              Solicitar Información
+            </a>
+            <button
+              onClick={() => window.open(`https://wa.me/543874404472?text=${encodeURIComponent(`Hola! Me interesa recibir información sobre la propiedad: ${property.title} en ${property.neighborhood}.`)}`, '_blank')}
+              className="border-2 border-emerald-500 text-emerald-500 px-10 py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-emerald-500 hover:text-white transition-all flex items-center justify-center gap-2"
+            >
+              <MessageCircle size={18} /> WhatsApp
+            </button>
+          </div>
+        </div>
+
+        {property.transaction === TransactionType.PROJECTS && (
+          <div className="bg-emerald-500/5 border border-emerald-500/20 p-12 rounded-[3rem] mb-20">
+            <h4 className="text-2xl font-black uppercase italic text-emerald-500 mb-6 flex items-center gap-3"><Info size={24} /> Información del Proyecto</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="bg-black/40 p-6 rounded-2xl">
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">Estado de Obra</p>
+                <p className="text-lg font-black text-white italic">En Pozo / Preventa</p>
+              </div>
+              <div className="bg-black/40 p-6 rounded-2xl">
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">Entrega Estimada</p>
+                <p className="text-lg font-black text-white italic">Diciembre 2026</p>
+              </div>
+              <div className="bg-black/40 p-6 rounded-2xl">
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">Unidades Totales</p>
+                <p className="text-lg font-black text-white italic">45 Unidades</p>
+              </div>
+              <div className="bg-black/40 p-6 rounded-2xl">
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">Financiación</p>
+                <p className="text-lg font-black text-white italic">30% entrega + 48 cuotas</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="space-y-12 mb-20">
+          {property.panoramicUrl && (
+            <div className="rounded-[3rem] overflow-hidden shadow-2xl border border-white/10">
+              <PanoramicViewer imageUrl={property.panoramicUrl} />
+            </div>
+          )}
+          {property.videoUrl && (
+            <div className="rounded-[3rem] overflow-hidden shadow-2xl border border-white/10">
+              <VideoTour videoUrl={property.videoUrl} />
+            </div>
+          )}
+        </div>
+
+        <div className="bg-white/[0.02] p-12 rounded-[4rem] mb-20 border border-white/10 shadow-inner">
+          <div className="flex items-center gap-4 mb-8">
+            <Sparkles className="text-orange-500" size={32} />
+            <h4 className="text-3xl font-black uppercase tracking-tighter italic text-white">Asesor AI Premium</h4>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <input type="text" placeholder="Haz una pregunta sobre esta propiedad..." className="flex-1 bg-black/40 border border-white/10 p-5 rounded-2xl font-bold text-sm outline-none focus:border-orange-500 text-white" value={aiMessage} onChange={(e) => setAiMessage(e.target.value)} />
+            <button onClick={onAiConsult} className="bg-orange-600 text-white py-4 md:py-0 px-10 rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl hover:bg-orange-700 transition-all">Consultar</button>
           </div>
 
-          {property.transaction === TransactionType.PROJECTS && (
-            <div className="bg-emerald-500/5 border border-emerald-500/20 p-12 rounded-[3rem] mb-20">
-              <h4 className="text-2xl font-black uppercase italic text-emerald-500 mb-6 flex items-center gap-3"><Info size={24} /> Información del Proyecto</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="bg-black/40 p-6 rounded-2xl">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">Estado de Obra</p>
-                  <p className="text-lg font-black text-white italic">En Pozo / Preventa</p>
-                </div>
-                <div className="bg-black/40 p-6 rounded-2xl">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">Entrega Estimada</p>
-                  <p className="text-lg font-black text-white italic">Diciembre 2026</p>
-                </div>
-                <div className="bg-black/40 p-6 rounded-2xl">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">Unidades Totales</p>
-                  <p className="text-lg font-black text-white italic">45 Unidades</p>
-                </div>
-                <div className="bg-black/40 p-6 rounded-2xl">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">Financiación</p>
-                  <p className="text-lg font-black text-white italic">30% entrega + 48 cuotas</p>
-                </div>
+          {aiResponse && (
+            <div className="space-y-4">
+              <div className="mt-8 p-8 bg-black/40 border border-orange-500/30 backdrop-blur-xl rounded-[2.5rem] shadow-2xl border-l-[12px] border-l-orange-600 animate-in slide-in-from-left-4 duration-500">
+                <p className="text-white text-base md:text-lg leading-relaxed font-semibold tracking-tight">
+                  {aiResponse}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-4 px-4 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
+                {(aiResponse.toLowerCase().includes('catálogo') || aiResponse.toLowerCase().includes('accesible') || aiResponse.toLowerCase().includes('barato') || aiResponse.toLowerCase().includes('económico')) && (
+                  <button onClick={onClose} className="bg-white text-black px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-orange-600 hover:text-white transition-all shadow-xl">Ver Catálogo Completo</button>
+                )}
+                {(aiResponse.toLowerCase().includes('agente') || aiResponse.toLowerCase().includes('whatsapp') || aiResponse.toLowerCase().includes('contacto')) && (
+                  <button onClick={() => window.open('https://wa.me/543871234567', '_blank')} className="bg-emerald-600 text-white px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl flex items-center gap-2"><MessageCircle size={14} /> Hablar con un Agente</button>
+                )}
               </div>
             </div>
           )}
-
-          <div className="space-y-12 mb-20">
-            {property.panoramicUrl && (
-              <div className="rounded-[3rem] overflow-hidden shadow-2xl border border-white/10">
-                <PanoramicViewer imageUrl={property.panoramicUrl} />
-              </div>
-            )}
-            {property.videoUrl && (
-              <div className="rounded-[3rem] overflow-hidden shadow-2xl border border-white/10">
-                <VideoTour videoUrl={property.videoUrl} />
-              </div>
-            )}
-          </div>
-
-          <div className="bg-white/[0.02] p-12 rounded-[4rem] mb-20 border border-white/10">
-            <div className="flex items-center gap-4 mb-8">
-              <Sparkles className="text-orange-500" size={32} />
-              <h4 className="text-3xl font-black uppercase tracking-tighter italic text-white">Asesor AI Premium</h4>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <input type="text" placeholder="Haz una pregunta..." className="flex-1 bg-black/40 border border-white/10 p-5 rounded-2xl font-bold text-sm outline-none focus:border-orange-500 text-white" value={aiMessage} onChange={(e) => setAiMessage(e.target.value)} />
-              <button onClick={onAiConsult} className="bg-orange-600 text-white py-4 md:py-0 px-10 rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl hover:bg-orange-700 transition-all">Consultar</button>
-            </div>
-            {aiResponse && <div className="mt-8 p-8 bg-black/60 border border-white/5 rounded-3xl italic text-gray-400 text-sm leading-relaxed border-l-8 border-orange-500 animate-in slide-in-from-left-4">{aiResponse}</div>}
-          </div>
-
-          <MortgageCalculator price={property.price} />
         </div>
-        <aside className="lg:w-[400px]">
-          <div className="sticky top-40 bg-[#0d0d0d] border border-white/10 rounded-[3rem] p-10 shadow-3xl">
-            <div className="flex items-center gap-4 mb-8 border-b border-white/10 pb-8 text-white">
-              <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-gray-600"><User size={32} /></div>
-              <div><h5 className="text-lg font-black uppercase italic">Agente SaltaProp</h5><p className="text-orange-500 text-[10px] font-black uppercase">Verificado</p></div>
-            </div>
-            <button className="w-full bg-orange-600 text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl hover:bg-orange-700 transition-all mb-4">Solicitar Información</button>
-            <button className="w-full border-2 border-emerald-500 text-emerald-600 py-5 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-emerald-500 hover:text-white transition-all flex items-center justify-center gap-2"><MessageCircle size={18} /> WhatsApp</button>
-            <div className="mt-8 text-center"><button className="text-[10px] font-black uppercase text-gray-600 hover:text-white transition-colors">Ver teléfono del agente</button></div>
+
+        <MortgageCalculator price={property.price} />
+      </div>
+
+      {/* BARRA FLOTANTE DE CONTACTO (Efecto Glass + Inteligente) */}
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] w-[90%] max-w-2xl group transition-all duration-700 hover:scale-[1.02]">
+        <div className="bg-black/40 backdrop-blur-3xl border border-white/10 p-4 md:p-5 rounded-full flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.5)] opacity-80 group-hover:opacity-100 group-hover:bg-black/95 group-hover:border-orange-500/30 transition-all duration-500">
+          <div className="hidden md:flex items-center gap-4 pl-4 border-r border-white/10 pr-6 mr-6">
+            <h5 className="text-[10px] font-black uppercase tracking-widest text-gray-400">Precio de Venta</h5>
+            <p className="text-lg font-black text-white group-hover:text-orange-500 transition-colors italic">{property.currency} {property.price.toLocaleString()}</p>
           </div>
-        </aside>
+          <div className="flex-1 flex gap-3">
+            <a
+              href={`mailto:lucasromanh@gmail.com?subject=Consulta sobre: ${property.title}&body=Hola, me gustaría recibir más información detallada sobre "${property.title}".`}
+              className="flex-1 bg-white/10 hover:bg-orange-600 text-white py-3 md:py-4 rounded-full font-black uppercase text-[9px] md:text-[10px] tracking-widest transition-all border border-white/10 hover:border-orange-600 flex items-center justify-center"
+            >
+              Saber más
+            </a>
+            <button
+              onClick={() => window.open(`https://wa.me/543874404472?text=${encodeURIComponent(`Hola SaltaProp! Quisiera consultar por la propiedad: ${property.title}`)}`, '_blank')}
+              className="flex-1 bg-emerald-600/80 hover:bg-emerald-600 text-white py-3 md:py-4 rounded-full font-black uppercase text-[9px] md:text-[10px] tracking-widest shadow-lg shadow-emerald-600/10 transition-all flex items-center justify-center gap-2"
+            >
+              <MessageCircle size={14} /> WhatsApp
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
