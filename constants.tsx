@@ -6,6 +6,30 @@ export const SALTA_CITIES = [
 ];
 
 export const MOCK_PROPERTIES: Property[] = [
+  {
+    id: 'LARES-1777352973431',
+    title: 'prueba',
+    description: `asascascascascascasc`,
+    price: 123123122,
+    currency: 'USD',
+    type: PropertyType.APARTMENT,
+    transaction: TransactionType.BUY,
+    address: 'asasc',
+    neighborhood: 'ascasc',
+    city: 'Salta Capital',
+    bedrooms: 2,
+    bathrooms: 2,
+    parking: 1,
+    area: 123123,
+    images: [
+      '/images/propiedades/departamentos/asasc/img-1.jpg'
+],
+    coordinates: [-24.7821, -65.4232],
+    featured: true,
+    amenities: ["Apto crédito"],
+    isPrivateBarrio: false,
+    advertiserType: 'Inmobiliaria',
+  },
   // --- PROPIEDADES REALES LARES ---
   {
     id: 'LARES-001',

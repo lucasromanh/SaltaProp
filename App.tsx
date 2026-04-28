@@ -48,6 +48,7 @@ import { MortgageCalculator, CurrencyWidget } from './components/FloatingUI';
 import { PropertyPlayer } from './components/PropertyPlayer';
 import { FilterSidebar } from './components/FilterSidebar';
 import { getPropertyAdvice } from './services/geminiService';
+import AdminPanel from './components/AdminPanel';
 
 declare const L: any;
 
@@ -434,29 +435,19 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen selection:bg-brand-500/30 text-white bg-[#050505] flex flex-col overflow-x-hidden">
-      {/* Auth Modal */}
+      {/* Auth Modal / Admin Panel */}
       {authModal && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/90 backdrop-blur-xl">
-          <div className="bg-[#0d0d0d] w-full max-w-md border border-white/10 p-10 rounded-[2.5rem] relative">
-            <button onClick={() => setAuthModal(null)} className="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors"><X size={24} /></button>
-            <h3 className="text-3xl font-black mb-2 uppercase italic text-brand-600">{authModal === 'LOGIN' ? 'Ingresar' : 'Publicar'}</h3>
-            <div className="space-y-4 mt-8">
-              <input type="email" placeholder="Email" className="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-sm outline-none focus:border-brand-500" />
-              <input type="password" placeholder="Contraseña" className="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-sm outline-none focus:border-brand-500" />
-              <button className="w-full bg-brand-600 py-4 rounded-xl font-black uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-brand-600/20 hover:bg-brand-700 transition-all">Continuar</button>
-            </div>
-          </div>
-        </div>
+        <AdminPanel onClose={() => setAuthModal(null)} />
       )}
 
       {/* Navigation */}
-      <nav className={`fixed top-0 left-0 right-0 z-[200] transition-all duration-500 ${isScrolled || view !== 'HOME' ? 'bg-black/95 backdrop-blur-3xl py-4 border-b border-white/5 shadow-2xl' : 'bg-transparent py-4 md:py-8'}`}>
+      <nav className={`fixed top-0 left-0 right-0 z-[200] transition-all duration-500 ${isScrolled || view !== 'HOME' ? 'bg-black/95 backdrop-blur-3xl py-2 border-b border-white/5 shadow-2xl' : 'bg-transparent py-4 md:py-8'}`}>
         <div className="container mx-auto px-6 flex justify-between items-center">
           <div className="flex items-center cursor-pointer" onClick={() => { setView('HOME'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
             <img
               src="/images/logo/LaresLogo.png"
               alt="LARES Inmobiliaria"
-              className="h-20 md:h-24 w-auto object-contain"
+              className={`h-20 md:h-24 w-auto object-contain transition-all duration-500 ${(isScrolled || view !== 'HOME') ? '-mb-8 md:-mb-10' : ''}`}
               onError={(e) => {
                 // Fallback si aún no subieron el logo
                 const target = e.target as HTMLImageElement;
@@ -499,7 +490,7 @@ const App: React.FC = () => {
             {/* Hero Section */}
             <section className="relative min-h-screen lg:h-[150vh] flex flex-col items-center justify-center overflow-hidden py-12 landscape:py-20">
               <div className="absolute inset-0 z-0">
-                <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=2400" className="w-full h-full object-cover opacity-60 scale-105 animate-slow-zoom" alt="Salta Background" />
+                <img src="/images/hero-bg.jpg" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=2400"; }} className="w-full h-full object-cover opacity-60 scale-105 animate-slow-zoom" alt="Salta Background" />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-[#050505]" />
               </div>
               <div className="relative z-10 container mx-auto px-6 text-center max-w-5xl">
@@ -1082,9 +1073,54 @@ const HorizontalCatalogCard: React.FC<{ property: Property, onClick: () => void 
   );
 };
 
-const PropertyDetailPage: React.FC<{ property: Property, onClose: () => void, onOpenOther: (p: Property) => void, onAiConsult: () => void, aiMessage: string, setAiMessage: (s: string) => void, aiResponse: string }> = ({ property, onClose, onOpenOther, onAiConsult, aiMessage, setAiMessage, aiResponse }) => (
-  <div className="bg-[#050505] text-white pt-32 pb-20 animate-in fade-in duration-500">
-    <div className="container mx-auto px-6 max-w-7xl">
+const ImageGalleryModal: React.FC<{ images: string[], initialIndex: number, onClose: () => void }> = ({ images, initialIndex, onClose }) => {
+  const [currentIndex, setCurrentIndex] = useState(initialIndex);
+
+  const nextImg = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const prevImg = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[500] bg-black/95 backdrop-blur-xl flex flex-col">
+      <div className="flex items-center justify-between p-6">
+        <span className="text-white font-black italic uppercase">{currentIndex + 1} / {images.length}</span>
+        <button onClick={onClose} className="text-gray-400 hover:text-white transition-colors">
+          <X size={32} />
+        </button>
+      </div>
+      <div className="flex-1 flex items-center justify-center relative overflow-hidden px-4 md:px-20 pb-10">
+        <button onClick={prevImg} className="absolute left-4 md:left-10 z-10 w-12 h-12 md:w-16 md:h-16 bg-white/10 hover:bg-brand-600 rounded-full flex items-center justify-center text-white transition-all backdrop-blur-md border border-white/20">
+          <ChevronLeft size={24} />
+        </button>
+        
+        <img src={images[currentIndex]} alt={`Gallery ${currentIndex + 1}`} className="max-w-full max-h-full object-contain select-none" />
+
+        <button onClick={nextImg} className="absolute right-4 md:right-10 z-10 w-12 h-12 md:w-16 md:h-16 bg-white/10 hover:bg-brand-600 rounded-full flex items-center justify-center text-white transition-all backdrop-blur-md border border-white/20">
+          <ChevronRight size={24} />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const PropertyDetailPage: React.FC<{ property: Property, onClose: () => void, onOpenOther: (p: Property) => void, onAiConsult: () => void, aiMessage: string, setAiMessage: (s: string) => void, aiResponse: string }> = ({ property, onClose, onOpenOther, onAiConsult, aiMessage, setAiMessage, aiResponse }) => {
+  const [showGallery, setShowGallery] = useState(false);
+  const [initialImageIndex, setInitialImageIndex] = useState(0);
+
+  const openGallery = (index: number) => {
+    setInitialImageIndex(index);
+    setShowGallery(true);
+  };
+
+  return (
+    <div className="bg-[#050505] text-white pt-32 pb-20 animate-in fade-in duration-500">
+      <div className="container mx-auto px-6 max-w-7xl">
       <button onClick={onClose} className="w-fit flex items-center gap-2 text-[10px] font-black uppercase text-gray-500 hover:text-white mb-8 transition-colors"><ChevronLeft size={16} /> Volver al listado</button>
 
       {/* TÍTULO Y PRECIO (Movido arriba de las fotos) */}
@@ -1102,12 +1138,12 @@ const PropertyDetailPage: React.FC<{ property: Property, onClose: () => void, on
 
       {/* GALERÍA DE FOTOS */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-24 md:h-[500px]">
-        <div className="md:col-span-2 relative h-[300px] md:h-full w-full min-h-0 rounded-2xl overflow-hidden bg-[#0a0a0a] border border-white/10 group cursor-zoom-in shadow-2xl">
+        <div onClick={() => openGallery(0)} className="md:col-span-2 relative h-[300px] md:h-full w-full min-h-0 rounded-2xl overflow-hidden bg-[#0a0a0a] border border-white/10 group cursor-pointer shadow-2xl">
           <img src={property.images[0]} className="absolute inset-0 w-full h-full object-contain md:object-cover transition-transform duration-700 group-hover:scale-105" alt="Main" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=1200"; }} />
         </div>
         <div className="md:col-span-2 grid grid-cols-2 grid-rows-2 gap-3 h-[400px] md:h-full w-full min-h-0">
           {property.images.slice(1, 5).map((img, i) => (
-            <div key={i} className="relative w-full h-full min-h-0 rounded-xl overflow-hidden bg-[#0a0a0a] border border-white/10 group cursor-zoom-in shadow-xl">
+            <div key={i} onClick={() => openGallery(i + 1)} className="relative w-full h-full min-h-0 rounded-xl overflow-hidden bg-[#0a0a0a] border border-white/10 group cursor-pointer shadow-xl">
               <img src={img} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Detail" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1200"; }} />
               {i === 3 && property.images.length > 5 && (
                 <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center">
@@ -1118,6 +1154,14 @@ const PropertyDetailPage: React.FC<{ property: Property, onClose: () => void, on
           ))}
         </div>
       </div>
+
+      {showGallery && (
+        <ImageGalleryModal 
+          images={property.images} 
+          initialIndex={initialImageIndex} 
+          onClose={() => setShowGallery(false)} 
+        />
+      )}
 
       <div className="w-full h-[550px] bg-gray-100 rounded-[3rem] my-20 relative overflow-hidden group shadow-2xl border-4 border-white/5">
         <LeafletMap property={property} />
@@ -1251,7 +1295,8 @@ const PropertyDetailPage: React.FC<{ property: Property, onClose: () => void, on
       </div>
     </div>
   </div>
-);
+  );
+};
 
 const DetailStat = ({ icon, label, value }: { icon: any, label: string, value: any }) => (
   <div className="flex flex-col items-start gap-2">
