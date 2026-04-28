@@ -42,7 +42,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
   const OptionBtn = ({ label, value, current, onClick }: any) => (
     <button
       onClick={() => onClick(value)}
-      className={`flex-1 py-3 text-[10px] font-bold uppercase border transition-all ${current === value ? 'bg-orange-600 border-orange-600 text-white' : 'bg-transparent border-white/10 text-gray-400 hover:border-orange-500/50'}`}
+      className={`flex-1 py-3 text-[10px] font-bold uppercase border transition-all ${current === value ? 'bg-brand-600 border-brand-600 text-white' : 'bg-transparent border-white/10 text-gray-400 hover:border-brand-500/50'}`}
     >
       {label}
     </button>
@@ -56,9 +56,9 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
           name={name}
           checked={current === value}
           onChange={() => onChange(value)}
-          className="appearance-none w-5 h-5 rounded-full border border-white/20 checked:border-orange-600 transition-all"
+          className="appearance-none w-5 h-5 rounded-full border border-white/20 checked:border-brand-600 transition-all"
         />
-        {current === value && <div className="absolute w-2.5 h-2.5 bg-orange-600 rounded-full" />}
+        {current === value && <div className="absolute w-2.5 h-2.5 bg-brand-600 rounded-full" />}
       </div>
       <span className={`text-[11px] font-bold transition-colors ${current === value ? 'text-white' : 'text-gray-400 group-hover:text-gray-200'}`}>{label}</span>
     </label>
@@ -71,9 +71,9 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
           type="checkbox"
           checked={checked}
           onChange={onChange}
-          className="appearance-none w-5 h-5 rounded-md border border-white/20 checked:border-orange-600 transition-all"
+          className="appearance-none w-5 h-5 rounded-md border border-white/20 checked:border-brand-600 transition-all"
         />
-        {checked && <div className="absolute w-2.5 h-2.5 bg-orange-600 rounded-sm" />}
+        {checked && <div className="absolute w-2.5 h-2.5 bg-brand-600 rounded-sm" />}
       </div>
       <span className={`text-[11px] font-bold transition-colors ${checked ? 'text-white' : 'text-gray-400 group-hover:text-gray-200'}`}>{label}</span>
     </label>
@@ -94,10 +94,10 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
             </button>
           )}
           <h4 className="text-[10px] md:text-[12px] font-black uppercase tracking-[0.2em] flex items-center gap-3 text-white">
-            <SlidersHorizontal size={16} className="text-orange-500" /> Filtros
+            <SlidersHorizontal size={16} className="text-brand-500" /> Filtros
           </h4>
         </div>
-        <button onClick={onClear} className="text-[9px] md:text-[10px] font-black uppercase text-orange-600 hover:text-orange-400 transition-colors">Limpiar</button>
+        <button onClick={onClear} className="text-[9px] md:text-[10px] font-black uppercase text-brand-600 hover:text-brand-400 transition-colors">Limpiar</button>
       </div>
 
       <div className="p-4 md:p-8 flex-1 space-y-6 md:space-y-10 custom-scrollbar overflow-y-auto">
@@ -118,7 +118,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
             <select
               value={filters.type}
               onChange={(e) => setFilters({ ...filters, type: e.target.value as any })}
-              className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-[11px] font-bold text-white focus:border-orange-500 outline-none appearance-none"
+              className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-[11px] font-bold text-white focus:border-brand-500 outline-none appearance-none"
             >
               <option value="" className="bg-black">Todos los tipos</option>
               {Object.values(PropertyType).map(pt => <option key={pt} value={pt} className="bg-black">{pt}</option>)}
@@ -151,14 +151,14 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
             <input
               type="number"
               placeholder="Desde"
-              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-[11px] font-bold outline-none focus:border-orange-500 text-white"
+              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-[11px] font-bold outline-none focus:border-brand-500 text-white"
               value={filters.surfaceMin}
               onChange={(e) => setFilters({ ...filters, surfaceMin: e.target.value })}
             />
             <input
               type="number"
               placeholder="Hasta"
-              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-[11px] font-bold outline-none focus:border-orange-500 text-white"
+              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-[11px] font-bold outline-none focus:border-brand-500 text-white"
               value={filters.surfaceMax}
               onChange={(e) => setFilters({ ...filters, surfaceMax: e.target.value })}
             />
@@ -211,7 +211,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
           </div>
           <button
             onClick={() => setShowAllAntiguedad(!showAllAntiguedad)}
-            className="text-[9px] font-black text-orange-500 uppercase flex items-center gap-1 hover:text-orange-400 transition-colors"
+            className="text-[9px] font-black text-brand-500 uppercase flex items-center gap-1 hover:text-brand-400 transition-colors"
           >
             {showAllAntiguedad ? 'Ver menos' : 'Ver más'} {showAllAntiguedad ? <ChevronUp size={10} /> : <ChevronDown size={10} />}
           </button>
@@ -307,7 +307,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
         <button onClick={onClear} className="flex-1 py-3 md:py-4 text-[10px] md:text-[11px] font-black uppercase tracking-widest text-gray-400 hover:text-white transition-colors">Limpiar</button>
         <button
           onClick={handleVerResultados}
-          className="flex-[2] bg-orange-600 text-white py-3 md:py-4 rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest shadow-xl shadow-orange-600/20 hover:bg-orange-700 transition-all"
+          className="flex-[2] bg-brand-600 text-white py-3 md:py-4 rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest shadow-xl shadow-brand-600/20 hover:bg-brand-700 transition-all"
         >
           Ver resultados
         </button>
@@ -319,7 +319,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
 const MediaBtn = ({ icon, label, active, onClick }: any) => (
   <button
     onClick={onClick}
-    className={`flex items-center gap-2 px-4 py-3 rounded-xl border text-[9px] font-black uppercase transition-all ${active ? 'bg-orange-600 border-orange-600 text-white shadow-lg' : 'bg-white/5 border-white/10 text-gray-400 hover:border-orange-500/50'}`}
+    className={`flex items-center gap-2 px-4 py-3 rounded-xl border text-[9px] font-black uppercase transition-all ${active ? 'bg-brand-600 border-brand-600 text-white shadow-lg' : 'bg-white/5 border-white/10 text-gray-400 hover:border-brand-500/50'}`}
   >
     {icon} {label}
   </button>

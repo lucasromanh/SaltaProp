@@ -216,17 +216,17 @@ export const CurrencyWidget = ({ view = 'HOME' }: { view?: string }) => {
               </div>
 
               {/* AI Insight Section */}
-              <div className="bg-orange-500/10 border border-orange-500/20 p-5 rounded-3xl relative overflow-hidden">
+              <div className="bg-brand-500/10 border border-brand-500/20 p-5 rounded-3xl relative overflow-hidden">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <Sparkles size={14} className="text-orange-500" />
-                    <span className="text-[9px] font-black uppercase tracking-widest text-orange-500">IA Insight Mercado</span>
+                    <Sparkles size={14} className="text-brand-500" />
+                    <span className="text-[9px] font-black uppercase tracking-widest text-brand-500">IA Insight Mercado</span>
                   </div>
                   {!aiInsight && (
                     <button
                       onClick={getAiMarketInsight}
                       disabled={aiLoading}
-                      className="text-[8px] font-black uppercase bg-orange-500 text-white px-2 py-1 rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50"
+                      className="text-[8px] font-black uppercase bg-brand-500 text-white px-2 py-1 rounded-lg hover:bg-brand-600 transition-colors disabled:opacity-50"
                     >
                       {aiLoading ? 'Analizando...' : 'Analizar'}
                     </button>

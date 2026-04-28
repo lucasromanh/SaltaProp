@@ -6,6 +6,67 @@ export const SALTA_CITIES = [
 ];
 
 export const MOCK_PROPERTIES: Property[] = [
+  // --- PROPIEDADES REALES LARES ---
+  {
+    id: 'LARES-001',
+    title: 'Departamento 3 Dormitorios - Los Avellanos 379',
+    description: `Inmobiliaria Lares ofrece a la venta:
+
+Departamento de 3 dormitorios que cuenta con:
+
+• Baño completo
+• Cocina comedor
+• Living
+• Oficina
+• Balcón
+• Habitación de servicio con baño
+• Lavadero
+
+Superficies:
+
+• Superficie cubierta: 94,77 m²
+• Superficie de balcones: 28,11 m²
+• Superficie total: 122,88 m²
+
+Precio: USD 120.000
+No incluye gastos de escrituración ni honorarios inmobiliarios.`,
+    price: 120000,
+    currency: 'USD',
+    type: PropertyType.APARTMENT,
+    transaction: TransactionType.BUY,
+    address: 'Los Avellanos 379',
+    neighborhood: 'Tres Cerritos',
+    city: 'Salta Capital',
+    bedrooms: 3,
+    bathrooms: 2,
+    parking: 0,
+    area: 122.88,
+    images: [
+      '/images/propiedades/departamentos/Los%20Avellanos%20379/IMG-20250512-WA0094.jpg',
+      '/images/propiedades/departamentos/Los%20Avellanos%20379/IMG-20250512-WA0095.jpg',
+      '/images/propiedades/departamentos/Los%20Avellanos%20379/IMG-20250512-WA0096.jpg',
+      '/images/propiedades/departamentos/Los%20Avellanos%20379/IMG-20250512-WA0097.jpg',
+      '/images/propiedades/departamentos/Los%20Avellanos%20379/IMG-20250512-WA0098.jpg',
+      '/images/propiedades/departamentos/Los%20Avellanos%20379/IMG-20250512-WA0099.jpg',
+      '/images/propiedades/departamentos/Los%20Avellanos%20379/IMG-20250512-WA0100.jpg',
+      '/images/propiedades/departamentos/Los%20Avellanos%20379/IMG-20250512-WA0101.jpg',
+      '/images/propiedades/departamentos/Los%20Avellanos%20379/IMG-20250512-WA0103.jpg',
+      '/images/propiedades/departamentos/Los%20Avellanos%20379/IMG-20250512-WA0104.jpg',
+      '/images/propiedades/departamentos/Los%20Avellanos%20379/IMG-20250512-WA0105.jpg',
+      '/images/propiedades/departamentos/Los%20Avellanos%20379/IMG-20250512-WA0106.jpg',
+      '/images/propiedades/departamentos/Los%20Avellanos%20379/IMG-20250512-WA0107.jpg',
+      '/images/propiedades/departamentos/Los%20Avellanos%20379/IMG-20250512-WA0108.jpg',
+      '/images/propiedades/departamentos/Los%20Avellanos%20379/IMG-20250512-WA0109.jpg',
+      '/images/propiedades/departamentos/Los%20Avellanos%20379/IMG-20250512-WA0111.jpg',
+      '/images/propiedades/departamentos/Los%20Avellanos%20379/IMG-20250512-WA0113.jpg',
+    ],
+    coordinates: [-24.7700, -65.3900],
+    featured: true,
+    amenities: ['Balcón', 'Lavadero', 'Habitación de servicio', 'Cocina comedor', 'Living', 'Oficina', 'Apto crédito'],
+    isPrivateBarrio: false,
+    advertiserType: 'Inmobiliaria',
+  },
+
   // --- SALTA CAPITAL ---
   {
     id: '1',

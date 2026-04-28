@@ -74,11 +74,11 @@ const LeafletMap: React.FC<{ property: Property }> = ({ property }) => {
     const customIcon = L.divIcon({
       html: `
         <div class="relative flex items-center justify-center">
-          <div class="absolute w-10 h-10 bg-orange-600/30 rounded-full animate-ping"></div>
-          <div class="bg-orange-600 w-9 h-9 rounded-full flex items-center justify-center border-4 border-white shadow-2xl relative z-10">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="1.5"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3" fill="#ea580c"/></svg>
+          <div class="absolute w-10 h-10 bg-brand-600/30 rounded-full animate-ping"></div>
+          <div class="bg-brand-600 w-9 h-9 rounded-full flex items-center justify-center border-4 border-white shadow-2xl relative z-10">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white" stroke="white" stroke-width="1.5"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3" fill="#8E1111"/></svg>
           </div>
-          <div class="absolute -bottom-1 w-2 h-2 bg-orange-600 rotate-45 border-r border-b border-white"></div>
+          <div class="absolute -bottom-1 w-2 h-2 bg-brand-600 rotate-45 border-r border-b border-white"></div>
         </div>
       `,
       className: 'custom-leaflet-marker',
@@ -93,7 +93,7 @@ const LeafletMap: React.FC<{ property: Property }> = ({ property }) => {
       <div style="padding: 16px; min-width: 240px; font-family: 'Plus Jakarta Sans', sans-serif; background: #111; border-radius: 1rem;">
         <div style="margin-bottom: 10px;">
           <h4 style="margin: 0; color: #fff; font-weight: 800; font-size: 14px; line-height: 1.2; letter-spacing: -0.01em;">${property.title}</h4>
-          <p style="margin: 2px 0 0 0; color: #ea580c; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em;">${property.neighborhood}, ${property.city}</p>
+          <p style="margin: 2px 0 0 0; color: #8E1111; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em;">${property.neighborhood}, ${property.city}</p>
         </div>
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 0.6rem;">
@@ -116,7 +116,7 @@ const LeafletMap: React.FC<{ property: Property }> = ({ property }) => {
         </div>
 
         <div style="display: flex; items-center; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;">
-          <span style="color: #ea580c; font-weight: 900; font-size: 18px;">${property.currency} ${property.price.toLocaleString()}</span>
+          <span style="color: #8E1111; font-weight: 900; font-size: 18px;">${property.currency} ${property.price.toLocaleString()}</span>
         </div>
       </div>
     `;
@@ -157,10 +157,20 @@ const GlobalFooter = ({ onLinkClick }: { onLinkClick: (link: string) => void }) 
       <div className="flex flex-col md:flex-row justify-between items-start gap-12 pt-16 border-t border-white/5">
         <div className="max-w-sm">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-8 h-8 bg-orange-600 rounded flex items-center justify-center">
-              <HomeIcon className="text-white" size={16} />
-            </div>
-            <h2 className="text-lg font-black tracking-tighter uppercase italic">Salta<span className="text-orange-600">Prop</span></h2>
+            <img
+              src="/images/logo/LaresLogo.png"
+              alt="LARES Inmobiliaria"
+              className="h-20 w-auto object-contain"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                const fallback = target.nextElementSibling as HTMLElement;
+                if (fallback) fallback.style.display = 'flex';
+              }}
+            />
+            <h2 className="text-lg font-black tracking-tighter uppercase italic hidden" style={{display:'none'}}>
+              <span className="text-brand-600">LARES</span>
+            </h2>
           </div>
           <p className="text-gray-500 text-sm leading-relaxed font-medium">La plataforma líder del mercado inmobiliario en Salta Capital. Conectamos sueños con hogares a través de tecnología y transparencia.</p>
         </div>
@@ -172,7 +182,7 @@ const GlobalFooter = ({ onLinkClick }: { onLinkClick: (link: string) => void }) 
       </div>
 
       <div className="mt-24 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-        <p className="text-[10px] font-black uppercase tracking-widest text-gray-600">© 2026 SALTAPROP PREMIUM REAL ESTATE. TODOS LOS DERECHOS RESERVADOS.</p>
+        <p className="text-[10px] font-black uppercase tracking-widest text-gray-600">© 2026 LARES INMOBILIARIA. TODOS LOS DERECHOS RESERVADOS.</p>
         <div className="flex gap-8 text-[10px] font-black uppercase tracking-widest text-gray-600">
           <a href="#" className="hover:text-white transition-colors">Términos</a>
           <a href="#" className="hover:text-white transition-colors">Privacidad</a>
@@ -346,7 +356,7 @@ const App: React.FC = () => {
           />
           <ExpandableCategory
             label="Nuevos Publicados"
-            icon={<Clock className="text-orange-500" />}
+            icon={<Clock className="text-brand-500" />}
             properties={MOCK_PROPERTIES.filter(p => ['1', '3'].includes(p.id))}
             onPropertyClick={openProperty}
             onSeeMore={() => {
@@ -401,7 +411,7 @@ const App: React.FC = () => {
                   type="button"
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => handleZoneClick(zone)}
-                  className={`px-4 md:px-8 py-2.5 md:py-3 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all border whitespace-nowrap ${activeProjectZone === zone ? 'bg-orange-600 border-orange-600 text-white' : 'border-white/10 text-gray-500 hover:border-white/30'}`}
+                  className={`px-4 md:px-8 py-2.5 md:py-3 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all border whitespace-nowrap ${activeProjectZone === zone ? 'bg-brand-600 border-brand-600 text-white' : 'border-white/10 text-gray-500 hover:border-white/30'}`}
                 >
                   {zone}
                 </button>
@@ -423,17 +433,17 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen selection:bg-orange-500/30 text-white bg-[#050505] flex flex-col overflow-x-hidden">
+    <div className="min-h-screen selection:bg-brand-500/30 text-white bg-[#050505] flex flex-col overflow-x-hidden">
       {/* Auth Modal */}
       {authModal && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/90 backdrop-blur-xl">
           <div className="bg-[#0d0d0d] w-full max-w-md border border-white/10 p-10 rounded-[2.5rem] relative">
             <button onClick={() => setAuthModal(null)} className="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors"><X size={24} /></button>
-            <h3 className="text-3xl font-black mb-2 uppercase italic text-orange-600">{authModal === 'LOGIN' ? 'Ingresar' : 'Publicar'}</h3>
+            <h3 className="text-3xl font-black mb-2 uppercase italic text-brand-600">{authModal === 'LOGIN' ? 'Ingresar' : 'Publicar'}</h3>
             <div className="space-y-4 mt-8">
-              <input type="email" placeholder="Email" className="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-sm outline-none focus:border-orange-500" />
-              <input type="password" placeholder="Contraseña" className="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-sm outline-none focus:border-orange-500" />
-              <button className="w-full bg-orange-600 py-4 rounded-xl font-black uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-orange-600/20 hover:bg-orange-700 transition-all">Continuar</button>
+              <input type="email" placeholder="Email" className="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-sm outline-none focus:border-brand-500" />
+              <input type="password" placeholder="Contraseña" className="w-full bg-white/5 border border-white/10 p-4 rounded-xl text-sm outline-none focus:border-brand-500" />
+              <button className="w-full bg-brand-600 py-4 rounded-xl font-black uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-brand-600/20 hover:bg-brand-700 transition-all">Continuar</button>
             </div>
           </div>
         </div>
@@ -442,31 +452,43 @@ const App: React.FC = () => {
       {/* Navigation */}
       <nav className={`fixed top-0 left-0 right-0 z-[200] transition-all duration-500 ${isScrolled || view !== 'HOME' ? 'bg-black/95 backdrop-blur-3xl py-4 border-b border-white/5 shadow-2xl' : 'bg-transparent py-4 md:py-8'}`}>
         <div className="container mx-auto px-6 flex justify-between items-center">
-          <div className="flex items-center gap-3 md:gap-4 cursor-pointer" onClick={() => { setView('HOME'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-            <div className="w-8 h-8 md:w-10 md:h-10 bg-orange-600 rounded-lg flex items-center justify-center transform rotate-12 transition-transform hover:rotate-0">
-              <HomeIcon className="text-white" size={16} />
-            </div>
-            <h1 className="text-lg md:text-xl font-black tracking-tighter uppercase italic">Salta<span className="text-orange-600">Prop</span></h1>
+          <div className="flex items-center cursor-pointer" onClick={() => { setView('HOME'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+            <img
+              src="/images/logo/LaresLogo.png"
+              alt="LARES Inmobiliaria"
+              className="h-20 md:h-24 w-auto object-contain"
+              onError={(e) => {
+                // Fallback si aún no subieron el logo
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                const fallback = target.nextElementSibling as HTMLElement;
+                if (fallback) fallback.style.display = 'flex';
+              }}
+            />
+            {/* Fallback texto mientras no hay logo */}
+            <h1 className="text-lg md:text-xl font-black tracking-tighter uppercase italic hidden" style={{display:'none'}}>
+              <span className="text-brand-600">LARES</span>
+            </h1>
           </div>
 
           <div className="hidden lg:flex items-center gap-10 text-[10px] font-black uppercase tracking-[0.25em]">
-            <button onClick={() => { setFilters({ ...initialFilters, transaction: TransactionType.BUY }); setView('LISTINGS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-orange-500 transition-colors">Compra</button>
-            <button onClick={() => { setFilters({ ...initialFilters, transaction: TransactionType.RENT }); setView('LISTINGS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-orange-500 transition-colors">Alquiler</button>
-            <button onClick={() => { setFilters({ ...initialFilters, transaction: TransactionType.PROJECTS }); setView('LISTINGS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-orange-500 transition-colors">Proyectos</button>
-            <button onClick={() => { setFilters({ ...initialFilters, isPrivateBarrio: true }); setView('LISTINGS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-orange-500 transition-colors">Barrios Privados</button>
+            <button onClick={() => { setFilters({ ...initialFilters, transaction: TransactionType.BUY }); setView('LISTINGS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-brand-500 transition-colors">Compra</button>
+            <button onClick={() => { setFilters({ ...initialFilters, transaction: TransactionType.PROJECTS }); setView('LISTINGS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-brand-500 transition-colors">Proyectos</button>
+            <button onClick={() => { setFilters({ ...initialFilters, isPrivateBarrio: true }); setView('LISTINGS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="hover:text-brand-500 transition-colors">Barrios Privados</button>
+            <button onClick={() => { setView('HOME'); setTimeout(() => { document.getElementById('sobre-nosotros')?.scrollIntoView({ behavior: 'smooth' }); }, 100); }} className="hover:text-brand-500 transition-colors">Nosotros</button>
           </div>
 
           <div className="flex items-center gap-3 md:gap-6">
             <button
               onClick={() => setShowPlayer(true)}
-              className="group relative flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-orange-600/10 border border-orange-600/20 rounded-full text-orange-600 hover:bg-orange-600 hover:text-white transition-all shadow-xl shadow-orange-600/5"
+              className="group relative flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-brand-600/10 border border-brand-600/20 rounded-full text-brand-600 hover:bg-brand-600 hover:text-white transition-all shadow-xl shadow-brand-600/5"
               title="Iniciar Showcase de Propiedades"
             >
               <Play size={18} fill="currentColor" className="ml-1" />
               <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 bg-black text-white text-[8px] font-black py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">MODO SHOWCASE</span>
             </button>
             <button onClick={() => { setFilters({ ...initialFilters, transaction: TransactionType.BUY }); setView('LISTINGS'); }} className="lg:hidden w-10 h-10 bg-white/5 rounded-full flex items-center justify-center"><Search size={18} /></button>
-            <button onClick={() => setAuthModal('LOGIN')} className="bg-white text-black px-5 md:px-7 py-2 md:py-2.5 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-widest hover:bg-orange-600 hover:text-white transition-all shadow-xl">Ingresar</button>
+            <button onClick={() => setAuthModal('LOGIN')} className="bg-white text-black px-5 md:px-7 py-2 md:py-2.5 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-widest hover:bg-brand-600 hover:text-white transition-all shadow-xl">Ingresar</button>
           </div>
         </div>
       </nav>
@@ -481,14 +503,14 @@ const App: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-[#050505]" />
               </div>
               <div className="relative z-10 container mx-auto px-6 text-center max-w-5xl">
-                <h2 className="text-3xl md:text-8xl font-black mb-6 md:mb-16 landscape:mb-8 leading-[1.1] tracking-tighter landscape:text-5xl">Tu próximo hogar <br /><span className="text-orange-600 italic">está en Salta.</span></h2>
+                <h2 className="text-3xl md:text-8xl font-black mb-6 md:mb-16 landscape:mb-8 leading-[1.1] tracking-tighter landscape:text-5xl">Tu próximo hogar <br /><span className="text-brand-600 italic">está en Salta.</span></h2>
                 <div className="bg-white/[0.03] backdrop-blur-3xl p-5 md:p-8 landscape:p-6 rounded-[1.5rem] md:rounded-[3rem] border border-white/10 shadow-3xl mx-auto w-full max-w-[calc(100vw-3rem)]">
                   <div className="flex gap-2 md:gap-4 mb-6 ml-0 md:ml-4 overflow-x-auto no-scrollbar pb-1 md:pb-0 justify-start md:justify-start">
-                    {[TransactionType.BUY, TransactionType.RENT, TransactionType.PROJECTS].map((t) => (
+                    {[TransactionType.BUY, TransactionType.PROJECTS].map((t) => (
                       <button
                         key={t}
                         onClick={() => setFilters(prev => ({ ...prev, transaction: t as any }))}
-                        className={`shrink-0 px-5 md:px-6 py-2.5 md:py-2 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-[0.15em] md:tracking-[0.2em] transition-all ${filters.transaction === t ? 'bg-orange-600 text-white' : 'hover:bg-white/5 text-gray-400'}`}
+                        className={`shrink-0 px-5 md:px-6 py-2.5 md:py-2 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-[0.15em] md:tracking-[0.2em] transition-all ${filters.transaction === t ? 'bg-brand-600 text-white' : 'hover:bg-white/5 text-gray-400'}`}
                       >
                         {t}
                       </button>
@@ -499,14 +521,14 @@ const App: React.FC = () => {
                       <select
                         value={filters.type}
                         onChange={(e) => setFilters({ ...filters, type: e.target.value as any })}
-                        className="w-full bg-white/5 border border-white/10 text-white p-4 md:p-4 rounded-2xl font-bold text-base md:text-sm outline-none focus:border-orange-500 cursor-pointer appearance-none h-[72px] md:h-[56px]"
+                        className="w-full bg-white/5 border border-white/10 text-white p-4 md:p-4 rounded-2xl font-bold text-base md:text-sm outline-none focus:border-brand-500 cursor-pointer appearance-none h-[72px] md:h-[56px]"
                       >
                         <option value="" className="bg-black">Tipo de inmueble</option>
                         {Object.values(PropertyType).map(pt => <option key={pt} value={pt} className="bg-black">{pt}</option>)}
                       </select>
                       <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" size={16} />
                     </div>
-                    <div className="flex-1 relative flex items-center bg-white/5 rounded-2xl h-[72px] md:h-[56px] border border-white/10 px-5 md:px-6 py-4 md:py-0 focus-within:border-orange-500 transition-all gap-3">
+                    <div className="flex-1 relative flex items-center bg-white/5 rounded-2xl h-[72px] md:h-[56px] border border-white/10 px-5 md:px-6 py-4 md:py-0 focus-within:border-brand-500 transition-all gap-3">
                       <Search className="text-gray-500 shrink-0" size={24} />
                       <input
                         type="text"
@@ -522,16 +544,16 @@ const App: React.FC = () => {
                             <button
                               key={suggestion}
                               onClick={() => { setFilters({ ...filters, search: suggestion }); setSearchSuggestions([]); }}
-                              className="w-full text-left px-5 md:px-6 py-4 md:py-4 hover:bg-orange-600/20 text-sm font-bold border-b border-white/5 last:border-0 transition-colors flex items-center gap-3"
+                              className="w-full text-left px-5 md:px-6 py-4 md:py-4 hover:bg-brand-600/20 text-sm font-bold border-b border-white/5 last:border-0 transition-colors flex items-center gap-3"
                             >
-                              <MapPin size={14} className="text-orange-500" />
+                              <MapPin size={14} className="text-brand-500" />
                               {suggestion}
                             </button>
                           ))}
                         </div>
                       )}
                     </div>
-                    <button onClick={handleSearchClick} className="bg-orange-600 hover:bg-orange-700 text-white font-black px-12 h-[72px] md:h-[56px] landscape:h-[56px] rounded-2xl transition-all w-full md:w-auto text-xs uppercase tracking-widest shadow-xl shadow-orange-600/20">BUSCAR</button>
+                    <button onClick={handleSearchClick} className="bg-brand-600 hover:bg-brand-700 text-white font-black px-12 h-[72px] md:h-[56px] landscape:h-[56px] rounded-2xl transition-all w-full md:w-auto text-xs uppercase tracking-widest shadow-xl shadow-brand-600/20">BUSCAR</button>
                   </div>
                 </div>
               </div>
@@ -540,6 +562,56 @@ const App: React.FC = () => {
             <InterestListsSection />
 
             <FeaturedProjectsSection />
+
+            {/* Sección Sobre Nosotros */}
+            <section id="sobre-nosotros" className="py-16 md:py-32 bg-[#080808] border-t border-white/5">
+              <div className="container mx-auto px-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
+                  <div>
+                    <p className="text-brand-500 text-[10px] font-black uppercase tracking-[0.3em] mb-4">Quiénes somos</p>
+                    <h3 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter mb-6 leading-tight">Lares Inmobiliaria</h3>
+                    <p className="text-gray-400 text-base md:text-lg leading-relaxed mb-6 font-medium">
+                      Somos una inmobiliaria con presencia en Salta Capital, especializada en la compra, venta y desarrollo de propiedades residenciales y comerciales. Nuestro equipo combina años de experiencia local con las mejores herramientas digitales para brindarte una experiencia de búsqueda única.
+                    </p>
+                    <p className="text-gray-500 text-sm md:text-base leading-relaxed mb-10">
+                      Creemos en la transparencia, el trato personalizado y en acompañar a cada cliente desde la primera búsqueda hasta la firma de escritura. En Lares, tu hogar es nuestra misión.
+                    </p>
+                    <div className="flex flex-wrap gap-4">
+                      <button
+                        onClick={() => window.open('https://wa.me/543872131825?text=Hola%20Lares!%20Quisiera%20m%C3%A1s%20informaci%C3%B3n.', '_blank')}
+                        className="bg-brand-600 hover:bg-brand-700 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all shadow-xl shadow-brand-600/20 flex items-center gap-2"
+                      >
+                        <MessageCircle size={16} /> Contactarnos
+                      </button>
+                      <button
+                        onClick={() => { setFilters(initialFilters); setView('LISTINGS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                        className="border border-white/20 text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:border-white/50 transition-all"
+                      >
+                        Ver propiedades
+                      </button>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-white/[0.03] border border-white/10 rounded-[2rem] p-8 flex flex-col items-center text-center hover:border-brand-500/30 transition-all">
+                      <p className="text-4xl font-black text-brand-500 italic mb-2">+10</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">Años de experiencia</p>
+                    </div>
+                    <div className="bg-white/[0.03] border border-white/10 rounded-[2rem] p-8 flex flex-col items-center text-center hover:border-brand-500/30 transition-all">
+                      <p className="text-4xl font-black text-brand-500 italic mb-2">+500</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">Propiedades vendidas</p>
+                    </div>
+                    <div className="bg-white/[0.03] border border-white/10 rounded-[2rem] p-8 flex flex-col items-center text-center hover:border-brand-500/30 transition-all">
+                      <p className="text-4xl font-black text-brand-500 italic mb-2">100%</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">Compromiso local</p>
+                    </div>
+                    <div className="bg-white/[0.03] border border-white/10 rounded-[2rem] p-8 flex flex-col items-center text-center hover:border-brand-500/30 transition-all">
+                      <p className="text-4xl font-black text-brand-500 italic mb-2">Salta</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">Capital & interior</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
 
             {/* Benefits Section */}
             <section className="py-16 md:py-32 border-y border-white/5 bg-black/40">
@@ -576,11 +648,11 @@ const App: React.FC = () => {
             {/* Developments CTA Section */}
             <section className="py-16 md:py-32 container mx-auto px-6">
               <div className="flex flex-col lg:flex-row items-center gap-12 md:gap-20 bg-white/[0.02] p-8 md:p-12 lg:p-20 rounded-[2rem] md:rounded-[4rem] border border-white/5 relative overflow-hidden group">
-                <div className="absolute -top-24 -right-24 w-96 h-96 bg-orange-600/10 blur-[120px] rounded-full pointer-events-none" />
+                <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-600/10 blur-[120px] rounded-full pointer-events-none" />
                 <div className="flex-1 relative z-10">
                   <h3 className="text-2xl md:text-5xl font-black mb-6 md:mb-8 leading-tight tracking-tighter italic">¿Conoces nuestros <br />nuevos desarrollos?</h3>
                   <p className="text-sm md:text-lg text-gray-400 mb-8 md:mb-12 leading-relaxed">Descubre proyectos exclusivos en etapa de pozo y construcción avanzada con planes de financiación únicos en Salta.</p>
-                  <button onClick={() => { setFilters({ ...initialFilters, transaction: TransactionType.PROJECTS }); setView('LISTINGS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="bg-transparent border-2 border-orange-600 text-orange-600 hover:bg-orange-600 hover:text-white px-10 py-4 rounded-2xl font-black transition-all text-xs uppercase tracking-widest shadow-xl shadow-orange-600/10">
+                  <button onClick={() => { setFilters({ ...initialFilters, transaction: TransactionType.PROJECTS }); setView('LISTINGS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="bg-transparent border-2 border-brand-600 text-brand-600 hover:bg-brand-600 hover:text-white px-10 py-4 rounded-2xl font-black transition-all text-xs uppercase tracking-widest shadow-xl shadow-brand-600/10">
                     Ver Proyectos en Salta
                   </button>
                 </div>
@@ -596,7 +668,7 @@ const App: React.FC = () => {
               <div className="container mx-auto px-6">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 md:mb-16 gap-4">
                   <div>
-                    <h4 className="text-orange-500 text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] mb-3 md:mb-4">Selección Premium</h4>
+                    <h4 className="text-brand-500 text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] mb-3 md:mb-4">Selección Premium</h4>
                     <h3 className="text-2xl md:text-4xl font-black uppercase italic tracking-tighter leading-tight">Oportunidades Destacadas</h3>
                   </div>
                   <button onClick={() => { setFilters(initialFilters); setView('LISTINGS'); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-white flex items-center gap-2 transition-all">Ver todo el catálogo <ArrowRight size={14} /></button>
@@ -619,7 +691,7 @@ const App: React.FC = () => {
                 onClick={() => setShowMobileFilters(true)}
                 className="lg:hidden flex items-center justify-center gap-3 bg-white/5 border border-white/10 p-4 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-white/10 transition-all active:scale-95"
               >
-                <Layers size={18} className="text-orange-500" />
+                <Layers size={18} className="text-brand-500" />
                 Filtrar Búsqueda
               </button>
 
@@ -653,7 +725,7 @@ const App: React.FC = () => {
                   <div className="flex items-center justify-center gap-4 pt-12 pb-20">
                     <button
                       onClick={() => { if (currentPage > 1) changePage(currentPage - 1); }}
-                      className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 hover:text-white hover:border-orange-500 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                      className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 hover:text-white hover:border-brand-500 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                       disabled={currentPage === 1}
                     >
                       <ChevronLeft />
@@ -663,7 +735,7 @@ const App: React.FC = () => {
                         <button
                           key={page}
                           onClick={() => changePage(page)}
-                          className={`w-12 h-12 rounded-2xl font-black transition-all ${currentPage === page ? 'bg-orange-600 text-white shadow-xl shadow-orange-600/30' : 'bg-white/5 border border-white/10 text-gray-400 hover:text-white'}`}
+                          className={`w-12 h-12 rounded-2xl font-black transition-all ${currentPage === page ? 'bg-brand-600 text-white shadow-xl shadow-brand-600/30' : 'bg-white/5 border border-white/10 text-gray-400 hover:text-white'}`}
                         >
                           {page}
                         </button>
@@ -671,7 +743,7 @@ const App: React.FC = () => {
                     </div>
                     <button
                       onClick={() => { if (currentPage < totalPages) changePage(currentPage + 1); }}
-                      className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 hover:text-white hover:border-orange-500 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                      className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 hover:text-white hover:border-brand-500 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
                       disabled={currentPage === totalPages}
                     >
                       <ChevronRight />
@@ -718,7 +790,19 @@ const App: React.FC = () => {
         setView('LISTINGS');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }} />
-      <CurrencyWidget view={view} />
+      {/* Botón flotante WhatsApp */}
+      <a
+        href="https://wa.me/543872131825?text=Hola%20Lares!%20Quisiera%20consultar%20sobre%20una%20propiedad."
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-[#25D366] hover:bg-[#20ba59] text-white font-black text-[11px] uppercase tracking-widest px-5 py-4 rounded-full shadow-2xl shadow-[#25D366]/30 transition-all hover:scale-105 active:scale-95"
+        title="Contactar por WhatsApp"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+        </svg>
+        Contactar
+      </a>
 
       {showPlayer && (
         <PropertyPlayer
@@ -755,7 +839,7 @@ const ExpandableCategory = ({ label, icon, properties, onPropertyClick, onSeeMor
           <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
             {icon}
           </div>
-          <h4 className="text-xl font-black uppercase italic tracking-tighter text-white group-hover:text-orange-500 transition-colors">
+          <h4 className="text-xl font-black uppercase italic tracking-tighter text-white group-hover:text-brand-500 transition-colors">
             {label}
           </h4>
         </div>
@@ -776,7 +860,7 @@ const ExpandableCategory = ({ label, icon, properties, onPropertyClick, onSeeMor
               <div
                 key={p.id}
                 onClick={() => onPropertyClick(p)}
-                className="group/card bg-black/40 border border-white/5 rounded-2xl md:rounded-3xl p-3 md:p-5 flex gap-3 md:gap-5 cursor-pointer hover:border-orange-500/30 hover:bg-black/60 transition-all shadow-xl"
+                className="group/card bg-black/40 border border-white/5 rounded-2xl md:rounded-3xl p-3 md:p-5 flex gap-3 md:gap-5 cursor-pointer hover:border-brand-500/30 hover:bg-black/60 transition-all shadow-xl"
               >
                 <div className="w-24 h-24 md:w-32 md:h-32 shrink-0 rounded-xl md:rounded-2xl overflow-hidden relative">
                   <img
@@ -791,11 +875,11 @@ const ExpandableCategory = ({ label, icon, properties, onPropertyClick, onSeeMor
                   <div>
                     <h5 className="text-[13px] md:text-lg font-black text-white line-clamp-1 italic uppercase tracking-tighter leading-tight">{p.title}</h5>
                     <p className="text-[8px] md:text-[9px] font-black uppercase text-gray-500 tracking-widest mt-0.5 md:mt-1 truncate">
-                      <MapPin size={8} className="inline mr-1 text-orange-500" /> {p.neighborhood}
+                      <MapPin size={8} className="inline mr-1 text-brand-500" /> {p.neighborhood}
                     </p>
                   </div>
                   <div className="flex items-end justify-between gap-2">
-                    <span className="text-base md:text-xl font-black text-orange-500 italic uppercase">
+                    <span className="text-base md:text-xl font-black text-brand-500 italic uppercase">
                       {p.currency} {p.price.toLocaleString()}
                     </span>
                     <div className="hidden sm:flex items-center gap-3 text-[9px] font-black uppercase text-gray-600">
@@ -813,7 +897,7 @@ const ExpandableCategory = ({ label, icon, properties, onPropertyClick, onSeeMor
                 e.stopPropagation();
                 if (onSeeMore) onSeeMore();
               }}
-              className="text-[9px] font-black uppercase tracking-[0.2em] text-orange-600 flex items-center gap-2 hover:translate-x-2 transition-transform"
+              className="text-[9px] font-black uppercase tracking-[0.2em] text-brand-600 flex items-center gap-2 hover:translate-x-2 transition-transform"
             >
               Ver Catálogo Completo <ArrowRight size={14} />
             </button>
@@ -826,15 +910,15 @@ const ExpandableCategory = ({ label, icon, properties, onPropertyClick, onSeeMor
 
 const BenefitItem = ({ title, desc, icon }: { title: string, desc: string, icon: React.ReactNode }) => (
   <div className="flex flex-col items-center text-center">
-    <div className="w-16 h-16 bg-white/[0.03] border border-white/5 rounded-3xl flex items-center justify-center text-orange-600 mb-8 shadow-xl transition-transform hover:scale-110">{icon}</div>
+    <div className="w-16 h-16 bg-white/[0.03] border border-white/5 rounded-3xl flex items-center justify-center text-brand-600 mb-8 shadow-xl transition-transform hover:scale-110">{icon}</div>
     <h4 className="text-lg font-black mb-3 italic uppercase">{title}</h4>
     <p className="text-sm text-gray-500 font-medium px-2 leading-relaxed">{desc}</p>
   </div>
 );
 
 const TipItem = ({ num, title, desc }: { num: string, title: string, desc: string }) => (
-  <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 p-8 rounded-[2.5rem] flex gap-6 hover:border-orange-600/30 transition-all group">
-    <div className="w-12 h-12 rounded-full bg-orange-600 flex items-center justify-center font-black text-white shrink-0 shadow-lg shadow-orange-600/20 group-hover:scale-110 transition-transform">{num}</div>
+  <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 p-8 rounded-[2.5rem] flex gap-6 hover:border-brand-600/30 transition-all group">
+    <div className="w-12 h-12 rounded-full bg-brand-600 flex items-center justify-center font-black text-white shrink-0 shadow-lg shadow-brand-600/20 group-hover:scale-110 transition-transform">{num}</div>
     <div>
       <h4 className="text-lg font-black mb-2 text-white italic uppercase">{title}</h4>
       <p className="text-sm text-gray-500 leading-relaxed font-medium">{desc}</p>
@@ -846,7 +930,7 @@ const ProjectCard: React.FC<{ project: Property, onClick: () => void }> = ({ pro
   <div onClick={onClick} className="group cursor-pointer bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:border-emerald-500/50 hover:-translate-y-2 shadow-2xl">
     <div className="relative aspect-video overflow-hidden">
       <img src={project.images[0]} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={project.title} />
-      <div className="absolute top-5 left-5 bg-orange-600/80 backdrop-blur-md text-white text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-widest">En Pozo</div>
+      <div className="absolute top-5 left-5 bg-brand-600/80 backdrop-blur-md text-white text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-widest">En Pozo</div>
     </div>
     <div className="p-8">
       <div className="flex justify-between items-start mb-4">
@@ -865,18 +949,18 @@ const ProjectCard: React.FC<{ project: Property, onClick: () => void }> = ({ pro
 );
 
 const CategoryLink = ({ label, icon, onClick }: { label: string, icon: React.ReactNode, onClick?: () => void }) => (
-  <div onClick={onClick} className="bg-white/[0.03] border border-white/5 p-6 rounded-2xl flex items-center justify-between hover:border-orange-500/30 transition-all cursor-pointer group">
+  <div onClick={onClick} className="bg-white/[0.03] border border-white/5 p-6 rounded-2xl flex items-center justify-between hover:border-brand-500/30 transition-all cursor-pointer group">
     <div className="flex items-center gap-4">
       <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">{icon}</div>
       <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 group-hover:text-white transition-colors">{label}</span>
     </div>
-    <ArrowRight size={14} className="text-gray-700 group-hover:text-orange-500 transition-all" />
+    <ArrowRight size={14} className="text-gray-700 group-hover:text-brand-500 transition-all" />
   </div>
 );
 
 const FooterLinks = ({ title, links, onLinkClick }: { title: string, links: string[], onLinkClick: (s: string) => void }) => (
   <div>
-    <h6 className="text-[10px] font-black uppercase tracking-[0.3em] text-orange-600 mb-8">{title}</h6>
+    <h6 className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-600 mb-8">{title}</h6>
     <ul className="space-y-4">
       {links.map(l => (
         <li key={l}>
@@ -906,7 +990,7 @@ const FooterCol = ({ title, items }: { title: string, items: string[] }) => (
 const GridPropertyCard: React.FC<{ property: Property, onClick: () => void }> = ({ property, onClick }) => (
   <div
     onClick={onClick}
-    className="group cursor-pointer bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[2rem] md:rounded-[2.5rem] overflow-hidden flex flex-col transition-all duration-500 hover:-translate-y-2 hover:border-orange-500/50 hover:shadow-3xl shadow-2xl"
+    className="group cursor-pointer bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[2rem] md:rounded-[2.5rem] overflow-hidden flex flex-col transition-all duration-500 hover:-translate-y-2 hover:border-brand-500/50 hover:shadow-3xl shadow-2xl"
   >
     <div className="relative aspect-[4/5] overflow-hidden">
       <img
@@ -923,8 +1007,8 @@ const GridPropertyCard: React.FC<{ property: Property, onClick: () => void }> = 
         <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-gray-500 mb-4 truncate">{property.neighborhood}, {property.city}</p>
       </div>
       <div className="flex gap-3 md:gap-4 text-[8px] md:text-[9px] font-black uppercase text-gray-400 border-t border-white/5 pt-4 mt-auto">
-        <span className="flex items-center gap-1"><Maximize size={10} className="text-orange-500 md:w-3 md:h-3" /> {property.area} m²</span>
-        <span className="flex items-center gap-1"><Bed size={10} className="text-orange-500 md:w-3 md:h-3" /> {property.bedrooms || '-'} Dorm.</span>
+        <span className="flex items-center gap-1"><Maximize size={10} className="text-brand-500 md:w-3 md:h-3" /> {property.area} m²</span>
+        <span className="flex items-center gap-1"><Bed size={10} className="text-brand-500 md:w-3 md:h-3" /> {property.bedrooms || '-'} Dorm.</span>
       </div>
     </div>
   </div>
@@ -950,7 +1034,7 @@ const HorizontalCatalogCard: React.FC<{ property: Property, onClick: () => void 
   };
 
   return (
-    <div onClick={onClick} className="group bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[2.5rem] overflow-hidden flex flex-col md:flex-row md:h-[420px] transition-all duration-500 hover:border-orange-500/30 hover:shadow-3xl cursor-pointer">
+    <div onClick={onClick} className="group bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[2.5rem] overflow-hidden flex flex-col md:flex-row md:h-[420px] transition-all duration-500 hover:border-brand-500/30 hover:shadow-3xl cursor-pointer">
       <div className="relative w-full md:w-[480px] h-[240px] md:h-full shrink-0 overflow-hidden bg-white/5">
         <img
           src={property.images[currentImg]}
@@ -961,13 +1045,13 @@ const HorizontalCatalogCard: React.FC<{ property: Property, onClick: () => void 
         <div className={`absolute top-6 left-6 ${property.transaction === TransactionType.PROJECTS ? 'bg-emerald-600/80' : 'bg-black/60'} backdrop-blur-xl px-4 py-1.5 rounded-full text-[9px] font-black uppercase text-white tracking-widest z-10`}>{property.transaction}</div>
 
         <div className="absolute inset-0 flex items-center justify-between px-4 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button onClick={prevImg} className="w-10 h-10 bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-orange-600 transition-colors"><ChevronLeft size={18} /></button>
-          <button onClick={nextImg} className="w-10 h-10 bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-orange-600 transition-colors"><ChevronRight size={18} /></button>
+          <button onClick={prevImg} className="w-10 h-10 bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-brand-600 transition-colors"><ChevronLeft size={18} /></button>
+          <button onClick={nextImg} className="w-10 h-10 bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-brand-600 transition-colors"><ChevronRight size={18} /></button>
         </div>
 
         <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-1.5">
           {property.images.map((_, idx) => (
-            <div key={idx} className={`w-1.5 h-1.5 rounded-full transition-all ${idx === currentImg ? 'bg-orange-500 w-4' : 'bg-white/30'}`} />
+            <div key={idx} className={`w-1.5 h-1.5 rounded-full transition-all ${idx === currentImg ? 'bg-brand-500 w-4' : 'bg-white/30'}`} />
           ))}
         </div>
       </div>
@@ -976,21 +1060,21 @@ const HorizontalCatalogCard: React.FC<{ property: Property, onClick: () => void 
         <div>
           <div className="flex justify-between items-start mb-6">
             <h4 className="text-4xl font-black tracking-tight text-white italic uppercase">{property.currency} {property.price.toLocaleString()}</h4>
-            <button onClick={toggleFav} className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${isFav ? 'bg-orange-600 text-white shadow-lg shadow-orange-600/20' : 'bg-white/5 text-gray-500 hover:text-white'}`}>
+            <button onClick={toggleFav} className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all ${isFav ? 'bg-brand-600 text-white shadow-lg shadow-brand-600/20' : 'bg-white/5 text-gray-500 hover:text-white'}`}>
               <Heart size={20} fill={isFav ? "currentColor" : "none"} />
             </button>
           </div>
-          <h5 className="text-2xl font-black mb-3 uppercase italic text-white leading-tight group-hover:text-orange-500 transition-colors line-clamp-2">{property.title}</h5>
-          <p className="text-gray-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-2 mb-8"><MapPin size={12} className="text-orange-500 shrink-0" /> <span className="truncate">{property.address}, {property.neighborhood}, {property.city}</span></p>
+          <h5 className="text-2xl font-black mb-3 uppercase italic text-white leading-tight group-hover:text-brand-500 transition-colors line-clamp-2">{property.title}</h5>
+          <p className="text-gray-500 text-[10px] font-black uppercase tracking-widest flex items-center gap-2 mb-8"><MapPin size={12} className="text-brand-500 shrink-0" /> <span className="truncate">{property.address}, {property.neighborhood}, {property.city}</span></p>
 
           <div className="flex flex-wrap gap-8 text-[11px] font-black uppercase border-y border-white/5 py-6">
-            <div className="flex items-center gap-2 text-white"><Maximize size={16} className="text-orange-500" /> <span>{property.area} m²</span></div>
-            <div className="flex items-center gap-2 text-white"><Bed size={16} className="text-orange-500" /> <span>{property.bedrooms || '-'} Dorm.</span></div>
-            <div className="flex items-center gap-2 text-white"><Bath size={16} className="text-orange-500" /> <span>{property.bathrooms || '-'} Baños</span></div>
+            <div className="flex items-center gap-2 text-white"><Maximize size={16} className="text-brand-500" /> <span>{property.area} m²</span></div>
+            <div className="flex items-center gap-2 text-white"><Bed size={16} className="text-brand-500" /> <span>{property.bedrooms || '-'} Dorm.</span></div>
+            <div className="flex items-center gap-2 text-white"><Bath size={16} className="text-brand-500" /> <span>{property.bathrooms || '-'} Baños</span></div>
           </div>
         </div>
         <div className="flex items-center gap-3 mt-auto pt-8">
-          <button className="flex-1 py-5 bg-orange-600 text-white rounded-[1.2rem] font-black text-[10px] uppercase tracking-widest hover:bg-orange-700 transition-all shadow-xl shadow-orange-600/10">Ver Ficha Completa</button>
+          <button className="flex-1 py-5 bg-brand-600 text-white rounded-[1.2rem] font-black text-[10px] uppercase tracking-widest hover:bg-brand-700 transition-all shadow-xl shadow-brand-600/10">Ver Ficha Completa</button>
           <button className="w-16 h-14 border border-emerald-500/30 text-emerald-500 rounded-[1.2rem] hover:bg-emerald-500 hover:text-white transition-all flex items-center justify-center shrink-0"><MessageCircle size={20} /></button>
         </div>
       </div>
@@ -1003,32 +1087,39 @@ const PropertyDetailPage: React.FC<{ property: Property, onClose: () => void, on
     <div className="container mx-auto px-6 max-w-7xl">
       <button onClick={onClose} className="w-fit flex items-center gap-2 text-[10px] font-black uppercase text-gray-500 hover:text-white mb-8 transition-colors"><ChevronLeft size={16} /> Volver al listado</button>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-12 h-[500px]">
-        <div className="md:col-span-2 relative h-full rounded-2xl overflow-hidden bg-white/5 border border-white/10 group cursor-zoom-in">
-          <img src={property.images[0]} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Main" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=1200"; }} />
+      {/* TÍTULO Y PRECIO (Movido arriba de las fotos) */}
+      <div className="flex flex-col mb-8 relative z-10">
+        <h1 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tighter italic uppercase mb-4 md:mb-6 text-white leading-tight break-words">{property.title}</h1>
+        <div className="flex flex-wrap items-center gap-4 md:gap-6">
+          <div className={`px-4 md:px-6 py-2 rounded-xl text-xs md:text-sm font-black uppercase italic ${property.transaction === TransactionType.PROJECTS ? 'bg-emerald-600' : 'bg-brand-600'} text-white shadow-xl`}>{property.transaction}</div>
+          <h2 className="text-2xl md:text-4xl font-black text-brand-500 italic uppercase">{property.currency} {property.price.toLocaleString()}</h2>
         </div>
-        <div className="md:col-span-2 grid grid-cols-2 grid-rows-2 gap-3 h-full">
+        <p className="flex items-center gap-2 text-gray-400 text-xs md:text-sm font-bold uppercase tracking-widest mt-6">
+          <MapPin className="text-brand-500 shrink-0" size={20} />
+          {property.address}, {property.neighborhood}, {property.city}
+        </p>
+      </div>
+
+      {/* GALERÍA DE FOTOS */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-3 mb-24 md:h-[500px]">
+        <div className="md:col-span-2 relative h-[300px] md:h-full w-full min-h-0 rounded-2xl overflow-hidden bg-[#0a0a0a] border border-white/10 group cursor-zoom-in shadow-2xl">
+          <img src={property.images[0]} className="absolute inset-0 w-full h-full object-contain md:object-cover transition-transform duration-700 group-hover:scale-105" alt="Main" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=1200"; }} />
+        </div>
+        <div className="md:col-span-2 grid grid-cols-2 grid-rows-2 gap-3 h-[400px] md:h-full w-full min-h-0">
           {property.images.slice(1, 5).map((img, i) => (
-            <div key={i} className="rounded-xl overflow-hidden bg-white/5 border border-white/10 group cursor-zoom-in">
-              <img src={img} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Detail" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1200"; }} />
+            <div key={i} className="relative w-full h-full min-h-0 rounded-xl overflow-hidden bg-[#0a0a0a] border border-white/10 group cursor-zoom-in shadow-xl">
+              <img src={img} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Detail" onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1200"; }} />
+              {i === 3 && property.images.length > 5 && (
+                <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center">
+                  <span className="text-white font-black text-xl italic uppercase">+{property.images.length - 5} Fotos</span>
+                </div>
+              )}
             </div>
           ))}
         </div>
       </div>
 
-      <div className="flex flex-col mb-10">
-        <h1 className="text-5xl font-black tracking-tighter italic uppercase mb-6 text-white leading-none">{property.title}</h1>
-        <div className="flex items-center gap-6">
-          <div className={`px-6 py-2 rounded-xl text-sm font-black uppercase italic ${property.transaction === TransactionType.PROJECTS ? 'bg-emerald-600' : 'bg-orange-600'} text-white`}>{property.transaction}</div>
-          <h2 className="text-4xl font-black text-orange-500 italic uppercase">{property.currency} {property.price.toLocaleString()}</h2>
-        </div>
-        <p className="flex items-center gap-2 text-gray-400 text-sm font-bold uppercase tracking-widest mt-8">
-          <MapPin className="text-orange-500" size={20} />
-          {property.address}, {property.neighborhood}, {property.city}
-        </p>
-      </div>
-
-      <div className="w-full h-[550px] bg-gray-100 rounded-[3rem] mb-16 relative overflow-hidden group shadow-2xl border-4 border-white/5">
+      <div className="w-full h-[550px] bg-gray-100 rounded-[3rem] my-20 relative overflow-hidden group shadow-2xl border-4 border-white/5">
         <LeafletMap property={property} />
       </div>
 
@@ -1044,31 +1135,53 @@ const PropertyDetailPage: React.FC<{ property: Property, onClose: () => void, on
       {/* Layout de Contenido Centrado y Ancho Completo */}
       <div className="max-w-4xl mx-auto">
         <div className="mb-20">
-          <h3 className="text-2xl font-black uppercase italic mb-8 border-b-2 border-orange-500 w-fit">Memoria Descriptiva</h3>
+          <h3 className="text-2xl font-black uppercase italic mb-8 border-b-2 border-brand-500 w-fit">Memoria Descriptiva</h3>
           <p className="text-gray-400 text-xl font-medium leading-relaxed">{property.description}</p>
         </div>
 
-        {/* Tarjeta de Agente Integrada en el flujo */}
+        {/* Apto para crédito + Hipotecaria */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+          <div className={`rounded-[2rem] border p-6 flex items-center gap-5 ${ property.amenities?.includes('Apto crédito') ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-white/[0.03] border-white/10' }`}>
+            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-black shrink-0 ${ property.amenities?.includes('Apto crédito') ? 'bg-emerald-500/20 text-emerald-400' : 'bg-white/5 text-gray-500' }`}>
+              {property.amenities?.includes('Apto crédito') ? '✓' : '✗'}
+            </div>
+            <div>
+              <p className="text-[9px] font-black uppercase tracking-widest text-gray-500 mb-1">Propiedad apta para crédito</p>
+              <p className={`text-xl font-black italic uppercase ${ property.amenities?.includes('Apto crédito') ? 'text-emerald-400' : 'text-gray-400' }`}>
+                {property.amenities?.includes('Apto crédito') ? 'Sí' : 'No'}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => window.open(`https://wa.me/543872131825?text=${encodeURIComponent(`Hola Lares! Quisiera consultar sobre opciones hipotecarias para la propiedad: ${property.title} en ${property.neighborhood}.`)}`, '_blank')}
+            className="rounded-[2rem] border border-brand-500/30 bg-brand-500/10 p-6 flex items-center gap-5 hover:bg-brand-500/20 transition-all text-left group"
+          >
+            <div className="w-14 h-14 rounded-2xl bg-brand-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8E1111" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <div>
+              <p className="text-[9px] font-black uppercase tracking-widest text-gray-500 mb-1">¿Necesitás financiación?</p>
+              <p className="text-base font-black italic uppercase text-white">Consultar opciones hipotecarias</p>
+              <p className="text-[9px] text-brand-500 font-black uppercase tracking-wider mt-1">Vía WhatsApp →</p>
+            </div>
+          </button>
+        </div>
+
+        {/* Tarjeta de Agente */}
         <div className="bg-[#0d0d0d] border border-white/10 rounded-[3rem] p-8 md:p-12 mb-20 flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl">
           <div className="flex items-center gap-6">
             <div className="w-20 h-20 bg-white/5 rounded-2xl flex items-center justify-center text-gray-600"><User size={40} /></div>
             <div>
-              <h5 className="text-xl font-black uppercase italic text-white">Agente SaltaProp</h5>
-              <p className="text-orange-500 text-xs font-black uppercase tracking-widest">Especialista Verificado</p>
+              <h5 className="text-xl font-black uppercase italic text-white">Agente LARES</h5>
+              <p className="text-brand-500 text-xs font-black uppercase tracking-widest">Especialista Verificado</p>
             </div>
           </div>
           <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-            <a
-              href={`mailto:lucasromanh@gmail.com?subject=Consulta sobre: ${property.title}&body=Hola, me gustaría recibir más información y el PDF de detalles sobre la propiedad "${property.title}" en ${property.neighborhood}.`}
-              className="bg-orange-600 text-white px-10 py-4 rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl hover:bg-orange-700 transition-all text-center"
-            >
-              Solicitar Información
-            </a>
             <button
-              onClick={() => window.open(`https://wa.me/543874404472?text=${encodeURIComponent(`Hola! Me interesa recibir información sobre la propiedad: ${property.title} en ${property.neighborhood}.`)}`, '_blank')}
-              className="border-2 border-emerald-500 text-emerald-500 px-10 py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-emerald-500 hover:text-white transition-all flex items-center justify-center gap-2"
+              onClick={() => window.open(`https://wa.me/543872131825?text=${encodeURIComponent(`Hola Lares! Quisiera consultar por la propiedad: ${property.title} en ${property.neighborhood}.`)}`, '_blank')}
+              className="bg-brand-600 text-white px-10 py-4 rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl hover:bg-brand-700 transition-all flex items-center justify-center gap-2"
             >
-              <MessageCircle size={18} /> WhatsApp
+              <MessageCircle size={18} /> Consultar por WhatsApp
             </button>
           </div>
         </div>
@@ -1110,55 +1223,25 @@ const PropertyDetailPage: React.FC<{ property: Property, onClose: () => void, on
           )}
         </div>
 
-        <div className="bg-white/[0.02] p-12 rounded-[4rem] mb-20 border border-white/10 shadow-inner">
-          <div className="flex items-center gap-4 mb-8">
-            <Sparkles className="text-orange-500" size={32} />
-            <h4 className="text-3xl font-black uppercase tracking-tighter italic text-white">Asesor AI Premium</h4>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <input type="text" placeholder="Haz una pregunta sobre esta propiedad..." className="flex-1 bg-black/40 border border-white/10 p-5 rounded-2xl font-bold text-sm outline-none focus:border-orange-500 text-white" value={aiMessage} onChange={(e) => setAiMessage(e.target.value)} />
-            <button onClick={onAiConsult} className="bg-orange-600 text-white py-4 md:py-0 px-10 rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl hover:bg-orange-700 transition-all">Consultar</button>
-          </div>
-
-          {aiResponse && (
-            <div className="space-y-4">
-              <div className="mt-8 p-8 bg-black/40 border border-orange-500/30 backdrop-blur-xl rounded-[2.5rem] shadow-2xl border-l-[12px] border-l-orange-600 animate-in slide-in-from-left-4 duration-500">
-                <p className="text-white text-base md:text-lg leading-relaxed font-semibold tracking-tight">
-                  {aiResponse}
-                </p>
-              </div>
-
-              <div className="flex flex-wrap gap-4 px-4 animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-300">
-                {(aiResponse.toLowerCase().includes('catálogo') || aiResponse.toLowerCase().includes('accesible') || aiResponse.toLowerCase().includes('barato') || aiResponse.toLowerCase().includes('económico')) && (
-                  <button onClick={onClose} className="bg-white text-black px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-orange-600 hover:text-white transition-all shadow-xl">Ver Catálogo Completo</button>
-                )}
-                {(aiResponse.toLowerCase().includes('agente') || aiResponse.toLowerCase().includes('whatsapp') || aiResponse.toLowerCase().includes('contacto')) && (
-                  <button onClick={() => window.open('https://wa.me/543871234567', '_blank')} className="bg-emerald-600 text-white px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl flex items-center gap-2"><MessageCircle size={14} /> Hablar con un Agente</button>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-
-        <MortgageCalculator price={property.price} />
+        {/* Calculadora e IA removidas - reemplazadas por contacto directo */}
       </div>
 
       {/* BARRA FLOTANTE DE CONTACTO (Efecto Glass + Inteligente) */}
       <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] w-[90%] max-w-2xl group transition-all duration-700 hover:scale-[1.02]">
-        <div className="bg-black/40 backdrop-blur-3xl border border-white/10 p-4 md:p-5 rounded-full flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.5)] opacity-80 group-hover:opacity-100 group-hover:bg-black/95 group-hover:border-orange-500/30 transition-all duration-500">
+        <div className="bg-black/40 backdrop-blur-3xl border border-white/10 p-4 md:p-5 rounded-full flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.5)] opacity-80 group-hover:opacity-100 group-hover:bg-black/95 group-hover:border-brand-500/30 transition-all duration-500">
           <div className="hidden md:flex items-center gap-4 pl-4 border-r border-white/10 pr-6 mr-6">
             <h5 className="text-[10px] font-black uppercase tracking-widest text-gray-400">Precio de Venta</h5>
-            <p className="text-lg font-black text-white group-hover:text-orange-500 transition-colors italic">{property.currency} {property.price.toLocaleString()}</p>
+            <p className="text-lg font-black text-white group-hover:text-brand-500 transition-colors italic">{property.currency} {property.price.toLocaleString()}</p>
           </div>
           <div className="flex-1 flex gap-3">
             <a
               href={`mailto:lucasromanh@gmail.com?subject=Consulta sobre: ${property.title}&body=Hola, me gustaría recibir más información detallada sobre "${property.title}".`}
-              className="flex-1 bg-white/10 hover:bg-orange-600 text-white py-3 md:py-4 rounded-full font-black uppercase text-[9px] md:text-[10px] tracking-widest transition-all border border-white/10 hover:border-orange-600 flex items-center justify-center"
+              className="flex-1 bg-white/10 hover:bg-brand-600 text-white py-3 md:py-4 rounded-full font-black uppercase text-[9px] md:text-[10px] tracking-widest transition-all border border-white/10 hover:border-brand-600 flex items-center justify-center"
             >
               Saber más
             </a>
             <button
-              onClick={() => window.open(`https://wa.me/543874404472?text=${encodeURIComponent(`Hola SaltaProp! Quisiera consultar por la propiedad: ${property.title}`)}`, '_blank')}
+              onClick={() => window.open(`https://wa.me/543872131825?text=${encodeURIComponent(`Hola Lares! Quisiera consultar por la propiedad: ${property.title}`)}`, '_blank')}
               className="flex-1 bg-emerald-600/80 hover:bg-emerald-600 text-white py-3 md:py-4 rounded-full font-black uppercase text-[9px] md:text-[10px] tracking-widest shadow-lg shadow-emerald-600/10 transition-all flex items-center justify-center gap-2"
             >
               <MessageCircle size={14} /> WhatsApp
@@ -1172,7 +1255,7 @@ const PropertyDetailPage: React.FC<{ property: Property, onClose: () => void, on
 
 const DetailStat = ({ icon, label, value }: { icon: any, label: string, value: any }) => (
   <div className="flex flex-col items-start gap-2">
-    <div className="text-orange-500 mb-2">{React.cloneElement(icon, { size: 28 })}</div>
+    <div className="text-brand-500 mb-2">{React.cloneElement(icon, { size: 28 })}</div>
     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-600 leading-none">{label}</p>
     <p className="text-xl font-black uppercase italic tracking-tighter text-white">{value}</p>
   </div>

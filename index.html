@@ -6,6 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Salta Propiedades | Premium Real Estate</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            400: '#b52020',
+                            500: '#8E1111',
+                            600: '#8E1111',
+                            700: '#6B0D0D',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -51,7 +67,7 @@
         .leaflet-popup-content-wrapper {
             background: #111 !important;
             color: white !important;
-            border: 2px solid #ea580c;
+            border: 2px solid #8E1111;
             border-radius: 1.5rem !important;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4) !important;
             padding: 0 !important;
@@ -63,7 +79,7 @@
         }
 
         .leaflet-popup-tip {
-            background: #ea580c !important;
+            background: #8E1111 !important;
         }
 
         .leaflet-popup-close-button {

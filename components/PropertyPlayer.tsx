@@ -124,14 +124,17 @@ export const PropertyPlayer: React.FC<PropertyPlayerProps> = ({
 
             {/* Logo Watermark (Always Visible) */}
             <div className="fixed bottom-8 right-8 z-[1001] pointer-events-none">
-                <div className="flex items-center gap-3 bg-black/20 backdrop-blur-md p-3 rounded-2xl border border-white/5 shadow-2xl">
-                    <div className="w-10 h-10 bg-orange-600 rounded-lg flex items-center justify-center transform rotate-12 shadow-lg">
-                        <HomeIcon className="text-white" size={20} />
-                    </div>
-                    <div>
-                        <h1 className="text-xl font-black tracking-tighter uppercase italic text-white leading-none">Salta<span className="text-orange-600">Prop</span></h1>
-                        <p className="text-[7px] font-black tracking-[0.3em] uppercase text-white/40 mt-0.5">Showcase Mode</p>
-                    </div>
+                <div className="flex items-center gap-3 bg-black/40 backdrop-blur-md p-3 rounded-2xl border border-white/10 shadow-2xl">
+                    <img
+                        src="/images/logo/LaresLogo.png"
+                        alt="LARES Inmobiliaria"
+                        className="h-20 w-auto object-contain"
+                        onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                        }}
+                    />
+                    <p className="text-[7px] font-black tracking-[0.3em] uppercase text-white/40 mt-0.5">Showcase Mode</p>
                 </div>
             </div>
 
@@ -153,13 +156,13 @@ export const PropertyPlayer: React.FC<PropertyPlayerProps> = ({
                     {/* Progress Bar Top */}
                     <div className="absolute top-0 left-0 right-0 h-1 md:h-2 bg-white/10 overflow-hidden">
                         <div
-                            className="h-full bg-orange-600 transition-all duration-100 ease-linear"
+                            className="h-full bg-brand-600 transition-all duration-100 ease-linear"
                             style={{ width: `${progress}%` }}
                         />
                     </div>
 
                     {/* Transaction Type Label */}
-                    <div className="absolute top-4 left-4 md:top-8 md:left-8 bg-orange-600 px-4 md:px-7 py-1.5 md:py-2.5 rounded-full text-[8px] md:text-sm font-black uppercase tracking-[0.2em] shadow-xl">
+                    <div className="absolute top-4 left-4 md:top-8 md:left-8 bg-brand-600 px-4 md:px-7 py-1.5 md:py-2.5 rounded-full text-[8px] md:text-sm font-black uppercase tracking-[0.2em] shadow-xl">
                         {currentProperty.transaction}
                     </div>
 
@@ -174,11 +177,11 @@ export const PropertyPlayer: React.FC<PropertyPlayerProps> = ({
                     <div className="bg-white/[0.03] backdrop-blur-3xl border border-white/10 p-5 md:p-8 lg:p-10 rounded-[1.5rem] md:rounded-[2.5rem] lg:rounded-[3.5rem] shadow-3xl relative flex-1 flex flex-col justify-center overflow-hidden">
 
                         <div className="showcase-content-wrapper w-full">
-                            <h4 className="text-orange-500 text-[8px] md:text-[9px] lg:text-[10px] font-black uppercase tracking-[0.3em] mb-2 md:mb-5">Propiedad en Showcase</h4>
-                            <h2 className="text-xl md:text-2xl lg:text-3xl xl:text-5xl font-black italic uppercase tracking-tighter text-white leading-[1.1] mb-4 md:mb-6 lg:mb-8">{currentProperty.title}</h2>
+                            <h4 className="text-brand-500 text-[8px] md:text-[9px] lg:text-[10px] font-black uppercase tracking-[0.3em] mb-2 md:mb-5">Propiedad en Showcase</h4>
+                            <h2 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-black italic uppercase tracking-tighter text-white leading-[1.1] mb-4 md:mb-6 lg:mb-8 break-words whitespace-normal" style={{ overflowWrap: 'break-word', wordBreak: 'break-word' }}>{currentProperty.title}</h2>
 
                             <p className="flex items-center gap-2 text-gray-400 text-[10px] md:text-xs lg:text-sm xl:text-lg font-bold uppercase tracking-widest mb-4 md:mb-8 lg:mb-10 xl:mb-12">
-                                <MapPin size={18} className="text-orange-500" />
+                                <MapPin size={18} className="text-brand-500" />
                                 {currentProperty.neighborhood}, {currentProperty.city}
                             </p>
 
@@ -196,15 +199,15 @@ export const PropertyPlayer: React.FC<PropertyPlayerProps> = ({
                             <div className="space-y-4 border-t border-white/5 pt-4 md:pt-6 lg:pt-8 flex flex-row items-center justify-between gap-4">
                                 <div className="flex gap-4 md:gap-8 lg:gap-10">
                                     <div className="flex flex-col items-center gap-1 md:gap-3">
-                                        <Maximize2 size={16} className="text-orange-500 md:w-6 md:h-6 lg:w-7 lg:h-7 xl:w-8 xl:h-8" />
+                                        <Maximize2 size={16} className="text-brand-500 md:w-6 md:h-6 lg:w-7 lg:h-7 xl:w-8 xl:h-8" />
                                         <span className="text-[9px] md:text-xs lg:text-sm xl:text-base font-black text-white">{currentProperty.area}m²</span>
                                     </div>
                                     <div className="flex flex-col items-center gap-1 md:gap-3">
-                                        <Bed size={16} className="text-orange-500 md:w-6 md:h-6 lg:w-7 lg:h-7 xl:w-8 xl:h-8" />
+                                        <Bed size={16} className="text-brand-500 md:w-6 md:h-6 lg:w-7 lg:h-7 xl:w-8 xl:h-8" />
                                         <span className="text-[9px] md:text-xs lg:text-sm xl:text-base font-black text-white">{currentProperty.bedrooms || '-'} D.</span>
                                     </div>
                                     <div className="flex flex-col items-center gap-1 md:gap-3">
-                                        <Bath size={16} className="text-orange-500 md:w-6 md:h-6 lg:w-7 lg:h-7 xl:w-8 xl:h-8" />
+                                        <Bath size={16} className="text-brand-500 md:w-6 md:h-6 lg:w-7 lg:h-7 xl:w-8 xl:h-8" />
                                         <span className="text-[9px] md:text-xs lg:text-sm xl:text-base font-black text-white">{currentProperty.bathrooms || '-'} B.</span>
                                     </div>
                                 </div>
@@ -233,7 +236,7 @@ export const PropertyPlayer: React.FC<PropertyPlayerProps> = ({
                         </button>
                         <button
                             onClick={() => setIsPlaying(!isPlaying)}
-                            className="w-12 h-12 md:w-18 md:h-18 lg:w-14 lg:h-14 flex items-center justify-center rounded-full bg-orange-600 hover:bg-orange-700 text-white transition-all shadow-xl shadow-orange-600/20 active:scale-90"
+                            className="w-12 h-12 md:w-18 md:h-18 lg:w-14 lg:h-14 flex items-center justify-center rounded-full bg-brand-600 hover:bg-brand-700 text-white transition-all shadow-xl shadow-brand-600/20 active:scale-90"
                         >
                             {isPlaying ? <Pause size={24} md:size={32} lg:size={24} /> : <Play size={24} md:size={32} lg:size={24} fill="currentColor" />}
                         </button>
@@ -250,7 +253,7 @@ export const PropertyPlayer: React.FC<PropertyPlayerProps> = ({
             {/* Close Button Top Right (Desktop Only) - Auto Hides */}
             <button
                 onClick={onClose}
-                className={`hidden lg:flex fixed top-8 right-8 z-[1001] w-14 h-14 items-center justify-center rounded-full bg-black/40 backdrop-blur-xl border border-white/10 text-gray-400 hover:text-white hover:bg-orange-600 transition-all active:scale-95 shadow-2xl ${showControls ? 'opacity-100 scale-100 translate-x-0' : 'opacity-0 scale-90 translate-x-4 pointer-events-none'}`}
+                className={`hidden lg:flex fixed top-8 right-8 z-[1001] w-14 h-14 items-center justify-center rounded-full bg-black/40 backdrop-blur-xl border border-white/10 text-gray-400 hover:text-white hover:bg-brand-600 transition-all active:scale-95 shadow-2xl ${showControls ? 'opacity-100 scale-100 translate-x-0' : 'opacity-0 scale-90 translate-x-4 pointer-events-none'}`}
             >
                 <X size={28} />
             </button>
