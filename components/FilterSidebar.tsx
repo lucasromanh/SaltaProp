@@ -106,7 +106,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
           <h5 className="text-[11px] font-black uppercase tracking-widest text-white">Operación</h5>
           <div className="flex rounded-xl overflow-hidden">
             <OptionBtn label="Compra" value={TransactionType.BUY} current={filters.transaction} onClick={(v: any) => setFilters({ ...filters, transaction: v })} />
-            <OptionBtn label="Alquiler" value={TransactionType.RENT} current={filters.transaction} onClick={(v: any) => setFilters({ ...filters, transaction: v })} />
+            {/* <OptionBtn label="Alquiler" value={TransactionType.RENT} current={filters.transaction} onClick={(v: any) => setFilters({ ...filters, transaction: v })} /> */}
             <OptionBtn label="Proyectos" value="PROYECTOS" current={filters.transaction} onClick={(v: any) => setFilters({ ...filters, transaction: v })} />
           </div>
         </div>
@@ -169,7 +169,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
         <div className="space-y-4">
           <h5 className="text-[11px] font-black uppercase tracking-widest text-white">Baños</h5>
           <div className="flex rounded-xl overflow-hidden">
-            {['1+', '2+', '3+', '4+', '5+'].map(val => (
+            {['1', '2', '3', '4', '5+'].map(val => (
               <OptionBtn key={val} label={val} value={val} current={filters.bathrooms} onClick={(v: string) => setFilters({ ...filters, bathrooms: v })} />
             ))}
           </div>
@@ -179,13 +179,13 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
         <div className="space-y-4">
           <h5 className="text-[11px] font-black uppercase tracking-widest text-white">Estacionamientos</h5>
           <div className="flex rounded-xl overflow-hidden">
-            {['0', '1+', '2+', '3+', '4+'].map(val => (
+            {['0', '1', '2', '3', '4+'].map(val => (
               <OptionBtn key={val} label={val} value={val} current={filters.parking} onClick={(v: string) => setFilters({ ...filters, parking: v })} />
             ))}
           </div>
         </div>
 
-        {/* Tipo de anunciante */}
+        {/* Tipo de anunciante
         <div className="space-y-3">
           <h5 className="text-[11px] font-black uppercase tracking-widest text-white">Tipo de anunciante</h5>
           <div className="space-y-2">
@@ -193,7 +193,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilter
             <RadioItem label="Inmobiliaria" value="Inmobiliaria" current={filters.advertiserType} name="adv" onChange={(v: string) => setFilters({ ...filters, advertiserType: v })} />
             <RadioItem label="Dueño directo" value="Dueño directo" current={filters.advertiserType} name="adv" onChange={(v: string) => setFilters({ ...filters, advertiserType: v })} />
           </div>
-        </div>
+        </div> */}
 
         {/* Antigüedad */}
         <div className="space-y-3">
